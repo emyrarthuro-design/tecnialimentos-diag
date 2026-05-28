@@ -32,11 +32,22 @@ export function ResultScreen({ businessData, answers }: ResultScreenProps) {
           })
         });
         const data = await response.json();
-        if (data.recommendation) {
-          setAiRecommendation(data.recommendation);
-        } else {
-          setAiRecommendation("No se pudo generar la recomendación en este momento. Por favor, contacte a nuestros asesores.");
-        }
+        
+        const recText = data.recommendation || "No se pudo generar la recomendación en este momento. Por favor, contacte a nuestros asesores.";
+        setAiRecommendation(recText);
+        
+        // Asynchronously save lead data now that we have all context
+        fetch('/api/diagnostic-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            businessData,
+            answers,
+            result: calcResult,
+            aiRecommendation: recText
+          })
+        }).catch(err => console.error("Lead submission error silently caught", err));
+        
       } catch (err) {
         setAiRecommendation("Error de conexión al generar la recomendación. Contacte a soporte si el problema persiste.");
       } finally {
@@ -84,7 +95,10 @@ export function ResultScreen({ businessData, answers }: ResultScreenProps) {
   const currentLevel = levelConfig[level];
 
   const whatsappMessage = encodeURIComponent(
-    `Hola, acabo de completar el Diagnóstico de Tecnialimentos para ${businessData.companyName}. Mi puntaje fue de ${scorePercentage}% (${currentLevel.label}). Me gustaría recibir asesoría.`
+    `Hola Tecnialimentos. Acabo de completar el diagnóstico sanitario de mi empresa *${businessData.companyName}* (${businessData.businessType}).\n\n` +
+    `*Resultado:* ${scorePercentage}% (${currentLevel.label})\n` +
+    `*Principales áreas a revisar:*\n${topAreasToReview.map(a => `- ${a}`).join('\n')}\n\n` +
+    `Me gustaría recibir orientación técnica inicial sobre cómo resolver estas brechas operativas.`
   );
   // Using a generic panama number for demo, ideally this comes from env or config.
   const whatsappUrl = `https://wa.me/50760000000?text=${whatsappMessage}`;

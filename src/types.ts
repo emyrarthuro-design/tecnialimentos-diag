@@ -29,9 +29,19 @@ export interface QuizState {
   answers: Record<number, AnswerType>;
 }
 
+export interface DiagnosticBreach {
+  breachId: number;
+  questionText: string;
+  answer: AnswerType;
+  commercialTag: string;
+  recommendedService: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
 export interface DiagnosticResult {
   scorePercentage: number;
   level: 'High' | 'Medium' | 'Critical';
   topAreasToReview: string[];
   suggestedServices: string[];
+  breaches: DiagnosticBreach[];
 }

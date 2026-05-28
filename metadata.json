@@ -1,0 +1,6 @@
+{
+  "name": "Diagnóstico Inicial de Cumplimiento Sanitario",
+  "description": "Una herramienta gratuita B2B para negocios de alimentos en Panamá, que permite realizar un diagnóstico inicial de sus permisos, documentación, personal y controles de calidad.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

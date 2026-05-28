@@ -84,16 +84,59 @@ async function startServer() {
   // API Route for capturing Diagnostic Leads
   app.post("/api/diagnostic-lead", async (req, res) => {
     try {
-      const { businessData = {}, answers = {}, result = {}, aiRecommendation = "" } = req.body;
-      const { contactName, companyName, role, whatsapp, email, province, district, businessType, businessState } = businessData;
-      const scorePercentage = result.scorePercentage;
-      const diagnosticLevel = result.level;
-      const topAreasToReview = result.topAreasToReview || [];
-      const breaches = result.breaches || [];
-      const commercialTags = breaches.map((b: any) => b.commercialTag) || [];
-      const recommendedServices = result.suggestedServices || [];
+      const body = req.body || {};
 
-      // 2. Valida campos mínimos
+      // 1. Normalización: Soporta tanto estructura "plana" como "anidada" de Tecnialimentos
+      let incoming = { ...body };
+      if (body.businessData && body.result) {
+        incoming.contactName = body.businessData.contactName;
+        incoming.companyName = body.businessData.companyName;
+        incoming.role = body.businessData.role;
+        incoming.whatsapp = body.businessData.whatsapp;
+        incoming.email = body.businessData.email;
+        incoming.province = body.businessData.province;
+        incoming.district = body.businessData.district;
+        incoming.businessType = body.businessData.businessType;
+        incoming.businessState = body.businessData.businessState;
+        
+        incoming.scorePercentage = body.result.scorePercentage;
+        incoming.diagnosticLevel = body.result.level === 'High' ? 'Alto' : body.result.level === 'Medium' ? 'Medio' : 'Crítico';
+        incoming.topAreasToReview = body.result.topAreasToReview || [];
+        
+        const breachesList = body.result.breaches || [];
+        incoming.commercialTags = breachesList.map((b: any) => b.commercialTag) || [];
+        incoming.recommendedServices = body.result.suggestedServices || [];
+        incoming.detectedBreaches = breachesList.map((b: any) => ({
+          breachId: b.breachId,
+          commercialTag: b.commercialTag,
+          recommendedService: b.recommendedService,
+          priority: b.priority
+        }));
+        incoming.aiRecommendation = body.aiRecommendation;
+        incoming.answers = body.answers || {};
+      }
+
+      const {
+        contactName,
+        companyName,
+        role = "",
+        whatsapp,
+        email,
+        province = "",
+        district = "",
+        businessType,
+        businessState = "",
+        scorePercentage,
+        diagnosticLevel,
+        topAreasToReview,
+        commercialTags,
+        recommendedServices,
+        detectedBreaches = [],
+        aiRecommendation,
+        answers = {}
+      } = incoming;
+
+      // 2. Valida campos mínimos obligatorios
       if (
         !contactName || 
         !companyName || 
@@ -102,40 +145,53 @@ async function startServer() {
         !businessType || 
         typeof scorePercentage === 'undefined' || 
         !diagnosticLevel || 
-        !topAreasToReview || 
-        !commercialTags || 
-        !recommendedServices || 
+        !Array.isArray(topAreasToReview) || 
+        !Array.isArray(commercialTags) || 
+        !Array.isArray(recommendedServices) || 
         !aiRecommendation
       ) {
-        console.error("Refused to capture lead: Missing validated fields in payload.");
-        return res.status(400).json({ error: "Faltan datos obligatorios para el registro del diagnóstico." });
+        console.warn("Validación fallida en /api/diagnostic-lead. Campos incompletos.");
+        return res.status(400).json({
+          success: false,
+          error: "Payload incompleto para registrar el diagnóstico."
+        });
       }
 
-      // Helper to limit string lengths
+      // Helper para limitar la longitud de los campos string antes de mandarlos a la celda
       const limitStr = (str: any, max = 500) => {
         if (!str) return "";
         const s = String(str);
         return s.length > max ? s.substring(0, max) + "..." : s;
       };
 
-      // 6. Prioridad comercial calculation
+      // 7. Cálculo preciso de Prioridad Comercial
       let priorityComercial = "Baja";
-      const hasHigh = breaches.some((b: any) => b.priority === 'high');
-      const hasMedium = breaches.some((b: any) => b.priority === 'medium');
-      if (hasHigh) {
-        priorityComercial = "Alta";
-      } else if (hasMedium) {
-        priorityComercial = "Media";
+      if (Array.isArray(detectedBreaches) && detectedBreaches.length > 0) {
+        const priorities = detectedBreaches.map((b: any) => {
+          if (!b) return "";
+          if (typeof b === 'string') return b.toLowerCase();
+          if (b.priority) return String(b.priority).toLowerCase();
+          return "";
+        });
+
+        if (priorities.includes("high") || priorities.includes("alta")) {
+          priorityComercial = "Alta";
+        } else if (priorities.includes("medium") || priorities.includes("media")) {
+          priorityComercial = "Media";
+        } else if (priorities.includes("low") || priorities.includes("baja")) {
+          priorityComercial = "Baja";
+        }
       }
 
-      // Log directly to console structure ready for monitoring
+      // Registro en consola estructurado
       console.log("----- NUEVO LEAD DE DIAGNÓSTICO -----");
-      console.log(JSON.stringify({ businessData, result, priorityComercial }, null, 2));
+      console.log(`Empresa: ${companyName} | Contacto: ${contactName} | WhatsApp: ${whatsapp}`);
+      console.log(`Puntaje: ${scorePercentage}% | Nivel: ${diagnosticLevel} | Prioridad: ${priorityComercial}`);
       console.log("-------------------------------------");
 
       let stored = false;
 
-      // 8 & 9 & 10. Google Sheets Integration
+      // 8, 9 & 10. Configuración de Google Sheets
       const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
       const clientEmail = process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
       const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY;
@@ -151,6 +207,7 @@ async function startServer() {
 
           const sheets = google.sheets({ version: "v4", auth });
           
+          // Construye la fila para Google Sheets con las 20 columnas exactas
           const rowValues = [
             new Date().toLocaleString("es-PA", { timeZone: "America/Panama" }), // Fecha
             limitStr(contactName),
@@ -186,18 +243,17 @@ async function startServer() {
           stored = true;
           console.log(`[Google Sheets] Lead registrado exitosamente en la pestaña "${tabName}"`);
         } catch (sheetsError) {
-          // 11. Si Google Sheets falla, registrar error solo en consola del servidor, no romper el flujo del usuario.
+          // 11. Si Google Sheets falla, registrar el error solo en consola del servidor, no romper el flujo del usuario.
           console.error("Error al registrar lead en Google Sheets:", sheetsError);
         }
       } else {
         console.warn("[Google Sheets] Configuración incompleta de variables de entorno para Google Sheets.");
       }
 
-      // 12. Responder con stored true/false según guardado
+      // responder exitosamente para no romper el flujo del cliente, indicando si se guardó en sheets
       res.status(200).json({ success: true, stored });
     } catch (error) {
       console.error("Lead Capture Exception:", error);
-      // Still send 200 to user flow so they see results without blocking at frontend
       res.status(200).json({ success: true, stored: false }); 
     }
   });

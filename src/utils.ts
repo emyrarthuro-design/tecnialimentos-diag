@@ -5,87 +5,48 @@ export function calculateDiagnosticStatus(answers: Record<number, AnswerType>): 
   let score = 0;
   let maxPossibleScore = 0;
   
-  const weakAreas: { index: number, id: number, text: string, questionText: string, answer: AnswerType }[] = [];
   const breaches: DiagnosticBreach[] = [];
 
+  // Grouping for categories
+  const CATEGORY_LABELS: Record<string, string> = {
+    permisologia_documental: "Permisología y cumplimiento documental",
+    personal_manipulador: "Personal manipulador",
+    control_sanitario_operativo: "Control sanitario operativo",
+    procesos_calidad_inocuidad: "Procesos, calidad e inocuidad"
+  };
+
+  // Convert answers and calculate score & maxPossibleScore
   Object.entries(answers).forEach(([questionId, answerType]) => {
     const id = parseInt(questionId, 10);
     const question = QUESTIONS.find((q) => q.id === id);
     if (!question) return;
 
     if (answerType === 'Sí') {
-      score += 5;
-      maxPossibleScore += 5;
-    } else if (answerType === 'No estoy seguro' || answerType === 'No') {
-      if (answerType === 'No estoy seguro') score += 2;
-      else score += 0;
-      
-      maxPossibleScore += 5;
-      weakAreas.push({ index: id, id, text: question.shortText, questionText: question.text, answer: answerType });
+      score += question.weight;
+      maxPossibleScore += question.weight;
+    } else if (answerType === 'No estoy seguro') {
+      score += (question.weight * 0.4);
+      maxPossibleScore += question.weight;
+    } else if (answerType === 'No') {
+      score += 0;
+      maxPossibleScore += question.weight;
+    } else {
+      // "No aplica" is completely excluded from the calculation
+      return;
+    }
 
-      let commercialTag = "General";
-      let recommendedService = "Asesoría Sanitaria";
-      let priority: 'high' | 'medium' | 'low' = 'low';
-
-      switch(id) {
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-          commercialTag = "Legal/Permisos";
-          recommendedService = "Ruta Licencia Sanitaria 360";
-          priority = 'high';
-          break;
-        case 6:
-          commercialTag = "Producto";
-          recommendedService = "Ruta Producto en Regla";
-          priority = 'high';
-          break;
-        case 7:
-          commercialTag = "Transporte";
-          recommendedService = "Ruta Transporte Seguro";
-          priority = 'medium';
-          break;
-        case 9:
-          commercialTag = "Ampliación";
-          recommendedService = "Ruta Ampliación Comercial";
-          priority = 'medium';
-          break;
-        case 10:
-        case 11:
-        case 12:
-          commercialTag = "Personal/Salud";
-          recommendedService = "Jornadas de Personal en Regla";
-          priority = 'high';
-          break;
-        case 13:
-          commercialTag = "Capacitación";
-          recommendedService = "Capacitación de personal";
-          priority = 'medium';
-          break;
-        case 17:
-        case 18:
-        case 20:
-          commercialTag = "Procesos";
-          recommendedService = "Manuales y procedimientos";
-          priority = 'medium';
-          break;
-        case 15:
-        case 16:
-        case 19:
-          commercialTag = "Calidad/Detección";
-          recommendedService = "Auditoría sanitaria";
-          priority = id === 16 ? 'high' : 'medium'; // Control temperaturas is high
-          break;
-      }
-
+    // Capture breaches for No or No estoy seguro
+    if (answerType === 'No' || answerType === 'No estoy seguro') {
       breaches.push({
         breachId: id,
         questionText: question.text,
         answer: answerType,
-        commercialTag,
-        recommendedService,
-        priority
+        commercialTag: question.commercialTag,
+        recommendedService: question.recommendedService,
+        priority: question.priority,
+        category: question.category,
+        weight: question.weight,
+        critical: question.critical
       });
     }
   });
@@ -96,35 +57,80 @@ export function calculateDiagnosticStatus(answers: Record<number, AnswerType>): 
   if (percentage >= 80) level = 'High';
   else if (percentage >= 50) level = 'Medium';
 
-  // Find top 3 areas to review based on negative answers (No or No estoy seguro)
-  // Sort high priority first
+  // Sort breaches by priority (high > medium > low), then critical (true > false), then weight (higher > lower)
   breaches.sort((a, b) => {
     const pVal = { high: 3, medium: 2, low: 1 };
-    return pVal[b.priority] - pVal[a.priority];
+    const pDiff = pVal[b.priority] - pVal[a.priority];
+    if (pDiff !== 0) return pDiff;
+
+    if (a.critical !== b.critical) {
+      return a.critical ? -1 : 1;
+    }
+
+    return b.weight - a.weight;
   });
 
-  const topAreasToReview = breaches.slice(0, 3).map(b => weakAreas.find(w => w.id === b.breachId)?.text || "Área a revisar");
+  // Mostrar como máximo 3 áreas principales a revisar
+  const topAreasToReview = breaches.slice(0, 3).map(b => {
+    const q = QUESTIONS.find(qy => qy.id === b.breachId);
+    return q ? q.shortText : "Área a revisar";
+  });
 
-  // Suggest services based on weak areas
-  const suggestedServices = new Set<string>();
-  breaches.forEach(b => suggestedServices.add(b.recommendedService));
+  // Suggest up to 3 unique service types
+  const suggestedServicesSet = new Set<string>();
+  breaches.forEach(b => suggestedServicesSet.add(b.recommendedService));
+  let suggestedServices = Array.from(suggestedServicesSet).slice(0, 3);
 
-  if (suggestedServices.size === 0) {
+  if (suggestedServices.length === 0) {
     if (level === 'High') {
-      suggestedServices.add("Auditoría sanitaria");
+      suggestedServices.push("Auditoría sanitaria");
     } else {
-      suggestedServices.add("Ruta Licencia Sanitaria 360");
+      suggestedServices.push("Ruta Licencia Sanitaria 360");
     }
   }
+
+  // Calculate desglose por categoría
+  const categoryScores = Object.keys(CATEGORY_LABELS).map((catKey) => {
+    let catScore = 0;
+    let catMaxPossible = 0;
+
+    QUESTIONS.filter((q) => q.category === catKey).forEach((q) => {
+      const ansObj = answers[q.id];
+      if (!ansObj || ansObj === 'No aplica') return;
+
+      if (ansObj === 'Sí') {
+        catScore += q.weight;
+        catMaxPossible += q.weight;
+      } else if (ansObj === 'No estoy seguro') {
+        catScore += (q.weight * 0.4);
+        catMaxPossible += q.weight;
+      } else if (ansObj === 'No') {
+        catMaxPossible += q.weight;
+      }
+    });
+
+    const catPercentage = catMaxPossible > 0 ? Math.round((catScore / catMaxPossible) * 100) : null;
+
+    return {
+      category: catKey,
+      score: Number(catScore.toFixed(1)),
+      maxPossible: catMaxPossible,
+      percentage: catPercentage,
+      label: CATEGORY_LABELS[catKey]
+    };
+  });
 
   return {
     scorePercentage: percentage,
     level,
     topAreasToReview,
-    suggestedServices: Array.from(suggestedServices).slice(0, 3), // Max 3 services
+    suggestedServices,
     breaches,
-    rawScore: score,
-    maxPossible: maxPossibleScore
+    rawScore: Number(score.toFixed(1)),
+    maxPossible: maxPossibleScore,
+    categoryScores,
+    totalRawScore: Number(score.toFixed(1)),
+    totalMaxPossibleScore: maxPossibleScore
   };
 }
 

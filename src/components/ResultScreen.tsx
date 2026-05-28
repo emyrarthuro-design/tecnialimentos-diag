@@ -86,8 +86,8 @@ export function ResultScreen({ businessData, answers }: ResultScreenProps) {
       bg: 'bg-red-100',
       border: 'border-red-200',
       icon: AlertCircle,
-      label: 'Nivel Crítico',
-      text: 'Podrías requerir revisión urgente en documentos primarios o procesos básicos. Es recomendable validar tu estatus.',
+      label: 'Revisión prioritaria recomendada',
+      text: 'Según tus respuestas, hay áreas importantes que conviene revisar antes de una inspección, apertura, ampliación o trámite sanitario. Esto no significa que exista un incumplimiento definitivo, pero sí indica que sería recomendable validar la situación con orientación técnica.',
       lights: ['bg-red-500 border-red-300 animate-pulse shadow-red-200', 'border-slate-50 bg-slate-100', 'border-slate-50 bg-slate-100']
     }
   };
@@ -101,7 +101,7 @@ export function ResultScreen({ businessData, answers }: ResultScreenProps) {
     `Me gustaría recibir orientación técnica inicial sobre cómo resolver estas brechas operativas.`
   );
   // Using a generic panama number for demo, ideally this comes from env or config.
-  const whatsappUrl = `https://wa.me/50760000000?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/50766953832?text=${whatsappMessage}`;
 
   return (
     <motion.div
@@ -155,6 +155,58 @@ export function ResultScreen({ businessData, answers }: ResultScreenProps) {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Alerta Prudente si existe al menos una brecha crítica */}
+      {result.breaches?.some(b => b.critical) && (
+        <div className="bg-amber-50/60 border border-amber-200/80 p-4 rounded-xl flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-800 leading-normal">
+            Detectamos al menos un área prioritaria que conviene validar con orientación técnica. Esto no significa un incumplimiento definitivo, pero sí puede ser importante revisarlo antes de una inspección, apertura, ampliación o trámite sanitario.
+          </p>
+        </div>
+      )}
+
+      {/* Resultado por áreas */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+        <h3 className="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider text-left">Resultado por áreas</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {result.categoryScores?.map((cat) => (
+            <div key={cat.category} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-between min-h-[140px]">
+              <div>
+                <span className="text-xs font-semibold text-slate-500 uppercase block leading-tight mb-2">
+                  {cat.label}
+                </span>
+              </div>
+              <div>
+                <div className="mt-2 flex items-baseline gap-1">
+                  {cat.percentage !== null ? (
+                    <>
+                      <span className={`text-2xl font-black ${
+                        cat.percentage >= 80 ? 'text-green-600' : cat.percentage >= 50 ? 'text-amber-500' : 'text-red-500'
+                      }`}>
+                        {cat.percentage}%
+                      </span>
+                      <span className="text-xs text-slate-400 font-medium">cumplimiento</span>
+                    </>
+                  ) : (
+                    <span className="text-xs font-medium text-slate-400 italic">No aplica para este diagnóstico</span>
+                  )}
+                </div>
+                {cat.percentage !== null && (
+                  <div className="w-full bg-slate-200 h-1.5 rounded-full mt-3 overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${
+                        cat.percentage >= 80 ? 'bg-green-500' : cat.percentage >= 50 ? 'bg-amber-400' : 'bg-red-500'
+                      }`}
+                      style={{ width: `${cat.percentage}%` }}
+                    ></div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

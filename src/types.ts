@@ -21,7 +21,13 @@ export type AnswerType = 'Sí' | 'No' | 'No estoy seguro' | 'No aplica';
 export interface Question {
   id: number;
   text: string;
-  shortText: string; // Used for "Áreas a revisar" reporting
+  shortText: string;
+  category: string;
+  weight: number;
+  critical: boolean;
+  commercialTag: string;
+  recommendedService: string;
+  priority: 'high' | 'medium' | 'low';
 }
 
 export interface QuizState {
@@ -36,6 +42,17 @@ export interface DiagnosticBreach {
   commercialTag: string;
   recommendedService: string;
   priority: 'high' | 'medium' | 'low';
+  category: string;
+  weight: number;
+  critical: boolean;
+}
+
+export interface DiagnosticCategoryScore {
+  category: string;
+  score: number;
+  maxPossible: number;
+  percentage: number | null;
+  label: string;
 }
 
 export interface DiagnosticResult {
@@ -44,4 +61,7 @@ export interface DiagnosticResult {
   topAreasToReview: string[];
   suggestedServices: string[];
   breaches: DiagnosticBreach[];
+  categoryScores?: DiagnosticCategoryScore[];
+  totalRawScore?: number;
+  totalMaxPossibleScore?: number;
 }

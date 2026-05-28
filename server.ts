@@ -110,8 +110,14 @@ async function startServer() {
           breachId: b.breachId,
           commercialTag: b.commercialTag,
           recommendedService: b.recommendedService,
-          priority: b.priority
+          priority: b.priority,
+          category: b.category,
+          weight: b.weight,
+          critical: b.critical
         }));
+        incoming.categoryScores = body.result.categoryScores || [];
+        incoming.totalRawScore = body.result.totalRawScore || 0;
+        incoming.totalMaxPossibleScore = body.result.totalMaxPossibleScore || 0;
         incoming.aiRecommendation = body.aiRecommendation;
         incoming.answers = body.answers || {};
       }
@@ -132,6 +138,9 @@ async function startServer() {
         commercialTags,
         recommendedServices,
         detectedBreaches = [],
+        categoryScores = [],
+        totalRawScore = 0,
+        totalMaxPossibleScore = 0,
         aiRecommendation,
         answers = {}
       } = incoming;
@@ -226,7 +235,13 @@ async function startServer() {
             limitStr(recommendedServices.join(', '), 1000),
             priorityComercial,
             limitStr(aiRecommendation, 5000),
-            JSON.stringify(answers),
+            JSON.stringify({
+              answers,
+              categoryScores,
+              totalRawScore,
+              totalMaxPossibleScore,
+              detectedBreaches
+            }),
             "Diagnóstico gratuito web", // Fuente
             "Nuevo diagnóstico" // Estado comercial
           ];

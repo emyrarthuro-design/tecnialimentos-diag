@@ -147,6 +147,55 @@ El sistema utiliza las 3 principales brechas para la redacción del mensaje din�
 
 ---
 
+---
+
+## Configuración de variables de entorno
+
+Para que el sistema de autodiagnóstico pueda almacenar leads de manera automatizada en Google Sheets y generar recomendaciones hiper-personalizadas utilizando inteligencia artificial mediante Google Gemini, debes preparar la configuración de entorno en tu servidor o crear un archivo local `.env.local` con las siguientes variables:
+
+```env
+# Gemini API Key
+GEMINI_API_KEY=tu_clave_api_de_gemini
+
+# Google Sheets Spreadsheet Integration
+GOOGLE_SHEETS_SPREADSHEET_ID=tu_spreadsheet_id_de_google_sheets
+GOOGLE_SHEETS_CLIENT_EMAIL=tu_correo_de_cuenta_de_servicio@proyecto.iam.gserviceaccount.com
+GOOGLE_SHEETS_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+GOOGLE_SHEETS_TAB_NAME=Leads Diagnóstico
+```
+
+*Nota:* Asegúrate de mantener estas variables a nivel del entorno de ejecución o en archivos protegidos. El archivo `.env.example` sirve como referencia segura y no contiene llaves reales.
+
+---
+
+## Cómo verificar si la configuración está lista
+
+Para validar que las variables de entorno se han cargado de manera correcta, segura y sin errores sintácticos en el servidor, puedes visitar el endpoint de diagnóstico técnico interno:
+
+`GET /api/config-check`
+
+Este endpoint responderá únicamente con booleanos de estado y el nombre de la hoja, garantizando la seguridad al enmascarar correos y nunca divulgar contraseñas o private keys secretas:
+
+```json
+{
+  "gemini": {
+    "configured": true
+  },
+  "googleSheets": {
+    "spreadsheetIdConfigured": true,
+    "clientEmailConfigured": true,
+    "privateKeyConfigured": true,
+    "clientEmailMasked": "tecni...@...iam.gserviceaccount.com",
+    "tabName": "Leads Diagnóstico",
+    "ready": true
+  }
+}
+```
+
+Si el parámetro `googleSheets.ready` se muestra como `true` y `gemini.configured` se muestra como `true`, la configuración de la integración está lista para operar al 100% en producción.
+
+---
+
 ## Seguridad
 
 - **Nunca realices commit** ni dejes rastros de los archivos `.env` o `.env.local` en tu repositorio git.

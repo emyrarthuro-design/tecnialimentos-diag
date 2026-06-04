@@ -7,9 +7,25 @@ import { google } from "googleapis";
 
 dotenv.config();
 
+function validateEnvironmentConfig() {
+  const geminiConfigured = !!process.env.GEMINI_API_KEY;
+  const spreadsheetConfigured = !!process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+  const clientEmailConfigured = !!process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
+  const privateKeyConfigured = !!process.env.GOOGLE_SHEETS_PRIVATE_KEY;
+  const tabNameConfigured = !!process.env.GOOGLE_SHEETS_TAB_NAME;
+
+  console.log(`[ENV CHECK] GEMINI_API_KEY: ${geminiConfigured ? "configurada" : "faltante"}`);
+  console.log(`[ENV CHECK] GOOGLE_SHEETS_SPREADSHEET_ID: ${spreadsheetConfigured ? "configurada" : "faltante"}`);
+  console.log(`[ENV CHECK] GOOGLE_SHEETS_CLIENT_EMAIL: ${clientEmailConfigured ? "configurada" : "faltante"}`);
+  console.log(`[ENV CHECK] GOOGLE_SHEETS_PRIVATE_KEY: ${privateKeyConfigured ? "configurada" : "faltante"}`);
+  console.log(`[ENV CHECK] GOOGLE_SHEETS_TAB_NAME: ${tabNameConfigured ? "configurada" : 'fallback "Leads Diagnóstico"'}`);
+}
+
+validateEnvironmentConfig();
+
 // Ensure the User-Agent header is set as required in the prompt guides.
 const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY,
+  apiKey: process.env.GEMINI_API_KEY || "placeholder_for_missing_key",
   httpOptions: {
     headers: {
       'User-Agent': 'aistudio-build',
@@ -36,6 +52,14 @@ async function startServer() {
       
       if (!businessData || typeof scorePercentage !== 'number') {
         return res.status(400).json({ error: "Invalid payload." });
+      }
+
+      // Check if GEMINI_API_KEY is configured
+      if (!process.env.GEMINI_API_KEY) {
+        console.warn("[Gemini] GEMINI_API_KEY faltante. Se retornará el fallback de recomendación.");
+        return res.json({ 
+          recommendation: "### Análisis Preliminar\n\nEn base a sus resultados, hemos identificado que cuenta con áreas de oportunidad en su operación actual. Es muy importante validar estos procesos para asegurar un nivel de cumplimiento adecuado ante las normativas en Panamá.\n\nLe sugerimos contactar con un consultor de Tecnialimentos para una revisión estructurada de su caso, lo que le permitirá formalizar su operación con confianza." 
+        });
       }
 
       const prompt = `
@@ -262,7 +286,7 @@ async function startServer() {
           console.error("Error al registrar lead en Google Sheets:", sheetsError);
         }
       } else {
-        console.warn("[Google Sheets] Configuración incompleta de variables de entorno para Google Sheets.");
+        console.warn("[Google Sheets] Configuración incompleta. Lead no almacenado.");
       }
 
       // responder exitosamente para no romper el flujo del cliente, indicando si se guardó en sheets
@@ -271,6 +295,45 @@ async function startServer() {
       console.error("Lead Capture Exception:", error);
       res.status(200).json({ success: true, stored: false }); 
     }
+  });
+
+  // Safe email masking helper for config diagnostics
+  function maskEmail(email: string | undefined): string {
+    if (!email) return "No provisto";
+    const parts = email.split("@");
+    if (parts.length !== 2) return "Formato no válido";
+    const name = parts[0];
+    const domain = parts[1];
+    const maskedName = name.length > 5 ? name.substring(0, 5) + "..." : name + "...";
+    let maskedDomain = domain;
+    if (domain.length > 15) {
+      maskedDomain = "..." + domain.substring(domain.length - 15);
+    }
+    return `${maskedName}@${maskedDomain}`;
+  }
+
+  // Diagnostic config-check API endpoint
+  app.get("/api/config-check", (req, res) => {
+    const geminiConfigured = !!process.env.GEMINI_API_KEY;
+    const spreadsheetIdConfigured = !!process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+    const clientEmailConfigured = !!process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
+    const privateKeyConfigured = !!process.env.GOOGLE_SHEETS_PRIVATE_KEY;
+    const ready = spreadsheetIdConfigured && clientEmailConfigured && privateKeyConfigured;
+    const clientEmailRaw = process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
+    
+    res.json({
+      gemini: {
+        configured: geminiConfigured
+      },
+      googleSheets: {
+        spreadsheetIdConfigured,
+        clientEmailConfigured,
+        privateKeyConfigured,
+        clientEmailMasked: clientEmailConfigured ? maskEmail(clientEmailRaw) : "No provisto",
+        tabName: process.env.GOOGLE_SHEETS_TAB_NAME || "Leads Diagnóstico",
+        ready
+      }
+    });
   });
 
   // Vite middleware for development

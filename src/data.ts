@@ -39,12 +39,11 @@ export const PROVINCES = [
   "Comarcas"
 ];
 
-// The questions specified in the weighted matrix of 25 inquiries
 export const QUESTIONS: Question[] = [
   {
     id: 1,
-    text: "¿Tu negocio cuenta con un Aviso de Operaciones vigente y registrado ante el MICI en Panamá?",
-    shortText: "Aviso de Operaciones",
+    text: "¿Tiene Aviso de Operación vigente?",
+    shortText: "Aviso de Operación",
     category: "permisologia_documental",
     weight: 5,
     critical: true,
@@ -54,7 +53,29 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: 2,
-    text: "¿Tu negocio de alimentos cuenta con la Licencia Sanitaria de Funcionamiento vigente expedida por el MINSA?",
+    text: "¿La actividad del Aviso de Operación coincide con lo que realmente hace?",
+    shortText: "Actividad del Aviso",
+    category: "permisologia_documental",
+    weight: 5,
+    critical: true,
+    commercialTag: "actividad_no_actualizada",
+    recommendedService: "Revisión / aumento de actividad",
+    priority: "high"
+  },
+  {
+    id: 3,
+    text: "¿La dirección del Aviso coincide con la ubicación real del local?",
+    shortText: "Dirección del Aviso",
+    category: "permisologia_documental",
+    weight: 5,
+    critical: true,
+    commercialTag: "direccion_no_coincide",
+    recommendedService: "Revisión documental inicial",
+    priority: "high"
+  },
+  {
+    id: 4,
+    text: "¿Tiene Licencia o Permiso Sanitario de Operación vigente?",
     shortText: "Licencia Sanitaria",
     category: "permisologia_documental",
     weight: 5,
@@ -64,130 +85,42 @@ export const QUESTIONS: Question[] = [
     priority: "high"
   },
   {
-    id: 3,
-    text: "¿La actividad comercial descrita en tu Aviso de Operaciones coincide exactamente con la operación que realizas hoy?",
-    shortText: "Actividad Comercial",
-    category: "permisologia_documental",
-    weight: 3,
-    critical: false,
-    commercialTag: "actividad_no_actualizada",
-    recommendedService: "Revisión / aumento de actividad",
-    priority: "high"
-  },
-  {
-    id: 4,
-    text: "¿Tienes a mano toda la documentación legal de la empresa (Pacto Social, Registro Público, cédula del representante) al día?",
-    shortText: "Expediente Legal",
-    category: "permisologia_documental",
-    weight: 3,
-    critical: false,
-    commercialTag: "expediente_incompleto",
-    recommendedService: "Preparación de expediente",
-    priority: "high"
-  },
-  {
     id: 5,
-    text: "¿Cuentas con notas, poderes firmados, o autorizaciones listos para agilizar trámites ante entidades públicas?",
-    shortText: "Poderes y Autorizaciones",
+    text: "¿La Licencia Sanitaria coincide con la actividad real del negocio?",
+    shortText: "Actividad Licencia",
     category: "permisologia_documental",
-    weight: 2,
-    critical: false,
-    commercialTag: "falta_autorizacion",
-    recommendedService: "Gestión documental",
-    priority: "medium"
+    weight: 5,
+    critical: true,
+    commercialTag: "licencia_no_coincide",
+    recommendedService: "Ruta Licencia Sanitaria 360",
+    priority: "high"
   },
   {
     id: 6,
-    text: "Si fabricas u ofreces alimentos empacados para distribución, ¿cuentan todos con Registro Sanitario vigente del MINSA o APA?",
-    shortText: "Registro Sanitario",
-    category: "permisologia_documental",
-    weight: 4,
-    critical: true,
-    commercialTag: "falta_registro_sanitario",
-    recommendedService: "Ruta Producto en Regla",
-    priority: "high"
-  },
-  {
-    id: 7,
-    text: "Si transportas materias primas o productos terminados, ¿los vehículos cuentan con Licencia Sanitaria de Transporte?",
-    shortText: "Licencia de Transporte",
-    category: "permisologia_documental",
-    weight: 2,
-    critical: false,
-    commercialTag: "falta_licencia_transporte",
-    recommendedService: "Ruta Transporte Seguro",
-    priority: "medium"
-  },
-  {
-    id: 8,
-    text: "Si vendes alcohol como complemento en tu local, ¿la actividad de expendio de licor está aprobada y actualizada?",
-    shortText: "Permiso de Licor",
-    category: "permisologia_documental",
-    weight: 2,
-    critical: false,
-    commercialTag: "requiere_aumento_licor",
-    recommendedService: "Ruta Ampliación Comercial",
-    priority: "medium"
-  },
-  {
-    id: 9,
-    text: "Si estás por abrir o ampliar, ¿conoces los requerimientos y planos aprobados previamente para evitar cierres?",
-    shortText: "Planificación de Permisos",
-    category: "permisologia_documental",
-    weight: 3,
-    critical: false,
-    commercialTag: "necesita_orientacion",
-    recommendedService: "Diagnóstico técnico / ruta de cumplimiento",
-    priority: "medium"
-  },
-  {
-    id: 10,
-    text: "¿Todo el personal que manipula alimentos en tu establecimiento cuenta con el Carnet Blanco (Buena Salud) vigente de la Región de Salud de Panamá?",
+    text: "¿Todo el personal manipulador tiene carné blanco vigente?",
     shortText: "Carnet Blanco",
     category: "personal_manipulador",
-    weight: 5,
+    weight: 3,
     critical: true,
     commercialTag: "falta_carnet_blanco",
     recommendedService: "Jornada Carnet Blanco",
     priority: "high"
   },
   {
-    id: 11,
-    text: "¿Todo el personal manipulador de alimentos de tu negocio cuenta con el Carnet Verde de Adiestramiento Sanitario vigente expedido por una Escuela de Manipuladores aprobada?",
+    id: 7,
+    text: "¿Todo el personal manipulador tiene carné verde vigente?",
     shortText: "Carnet Verde",
     category: "personal_manipulador",
-    weight: 5,
+    weight: 3,
     critical: true,
     commercialTag: "falta_carnet_verde",
     recommendedService: "Jornada Carnet Verde",
     priority: "high"
   },
   {
-    id: 12,
-    text: "¿Tienes implementado un cronograma, alertas o sistema de control de vencimiento de los Carnets Blanco y Verde del personal?",
-    shortText: "Control de Carnets",
-    category: "personal_manipulador",
-    weight: 3,
-    critical: false,
-    commercialTag: "sin_control_vencimientos",
-    recommendedService: "Jornadas recurrentes de personal",
-    priority: "medium"
-  },
-  {
-    id: 13,
-    text: "¿Recibe tu personal entrenamiento continuo o capacitación técnica documentada en temas de higiene, BPM e inocuidad alimentaria?",
-    shortText: "Capacitación de Personal",
-    category: "personal_manipulador",
-    weight: 3,
-    critical: false,
-    commercialTag: "requiere_capacitacion",
-    recommendedService: "Capacitación de personal",
-    priority: "medium"
-  },
-  {
-    id: 14,
-    text: "¿Tu establecimiento tiene un certificado de control de plagas y fumigación vigente expedido por una empresa autorizada en Panamá?",
-    shortText: "Certificado de Fumigación",
+    id: 8,
+    text: "¿Tiene certificado de fumigación vigente?",
+    shortText: "Fumigación",
     category: "control_sanitario_operativo",
     weight: 3,
     critical: false,
@@ -196,8 +129,129 @@ export const QUESTIONS: Question[] = [
     priority: "medium"
   },
   {
+    id: 9,
+    text: "¿La empresa fumigadora está autorizada o cuenta con permiso sanitario?",
+    shortText: "Empresa de Fumigación",
+    category: "control_sanitario_operativo",
+    weight: 3,
+    critical: false,
+    commercialTag: "fumigadora_no_autorizada",
+    recommendedService: "Preparación para inspección",
+    priority: "medium"
+  },
+  {
+    id: 10,
+    text: "¿Tiene Plan de Manejo Integrado de Plagas?",
+    shortText: "Plan de Plagas",
+    category: "control_sanitario_operativo",
+    weight: 1,
+    critical: false,
+    commercialTag: "falta_plan_plagas",
+    recommendedService: "Auditoría sanitaria",
+    priority: "medium"
+  },
+  {
+    id: 11,
+    text: "¿Usa químicos aptos para la industria de alimentos?",
+    shortText: "Químicos Aptos",
+    category: "control_sanitario_operativo",
+    weight: 3,
+    critical: false,
+    commercialTag: "quimicos_no_aptos",
+    recommendedService: "Auditoría sanitaria",
+    priority: "medium"
+  },
+  {
+    id: 12,
+    text: "¿Tiene fichas técnicas o registros sanitarios de los químicos?",
+    shortText: "Fichas de Químicos",
+    category: "control_sanitario_operativo",
+    weight: 1,
+    critical: false,
+    commercialTag: "falta_fichas_quimicos",
+    recommendedService: "Auditoría sanitaria",
+    priority: "low"
+  },
+  {
+    id: 13,
+    text: "¿Tiene letreros de no fumar visibles?",
+    shortText: "Letreros No Fumar",
+    category: "control_sanitario_operativo",
+    weight: 1,
+    critical: false,
+    commercialTag: "falta_letreros_no_fumar",
+    recommendedService: "Preparación para inspección",
+    priority: "low"
+  },
+  {
+    id: 14,
+    text: "¿Tiene trampa de grasa instalada y funcional, si aplica?",
+    shortText: "Trampa de Grasa",
+    category: "control_sanitario_operativo",
+    weight: 3,
+    critical: false,
+    commercialTag: "falta_trampa_grasa",
+    recommendedService: "Auditoría sanitaria",
+    priority: "medium"
+  },
+  {
     id: 15,
-    text: "¿Cuentas con bitácoras escritas o registros diarios que evidencien las tareas de limpieza, desinfección y tipo de sanitizantes que usas?",
+    text: "¿Tiene registros de limpieza de la trampa de grasa?",
+    shortText: "Limpieza de Trampa",
+    category: "control_sanitario_operativo",
+    weight: 3,
+    critical: false,
+    commercialTag: "sin_registro_limpieza_trampa",
+    recommendedService: "Auditoría sanitaria",
+    priority: "medium"
+  },
+  {
+    id: 16,
+    text: "¿Tiene resultados de laboratorio de calidad de agua?",
+    shortText: "Análisis de Agua",
+    category: "control_sanitario_operativo",
+    weight: 1,
+    critical: false,
+    commercialTag: "falta_analisis_agua",
+    recommendedService: "Auditoría sanitaria",
+    priority: "medium"
+  },
+  {
+    id: 17,
+    text: "¿Compra materias primas a proveedores formales o aprobados sanitariamente?",
+    shortText: "Control Proveedores",
+    category: "procesos_calidad_inocuidad",
+    weight: 3,
+    critical: false,
+    commercialTag: "proveedores_no_aprobados",
+    recommendedService: "Manuales y procedimientos",
+    priority: "medium"
+  },
+  {
+    id: 18,
+    text: "¿Tiene Manual de BPM?",
+    shortText: "Manual de BPM",
+    category: "procesos_calidad_inocuidad",
+    weight: 3,
+    critical: false,
+    commercialTag: "falta_manual_bpm",
+    recommendedService: "Manuales y procedimientos",
+    priority: "medium"
+  },
+  {
+    id: 19,
+    text: "¿Tiene Manual de SSOP/POES?",
+    shortText: "Manual SSOP/POES",
+    category: "procesos_calidad_inocuidad",
+    weight: 3,
+    critical: false,
+    commercialTag: "falta_manual_poes",
+    recommendedService: "Manuales y procedimientos",
+    priority: "medium"
+  },
+  {
+    id: 20,
+    text: "¿Tiene registros de limpieza y desinfección?",
     shortText: "Registros de Limpieza",
     category: "control_sanitario_operativo",
     weight: 3,
@@ -207,114 +261,59 @@ export const QUESTIONS: Question[] = [
     priority: "medium"
   },
   {
-    id: 16,
-    text: "¿Llevas un control diario registrado por escrito de las temperaturas internas de equipos de refrigeración y congelación?",
-    shortText: "Control de Temperaturas",
+    id: 21,
+    text: "¿Tiene registros de temperatura de refrigeradores/congeladores?",
+    shortText: "Registro de Temperatura",
     category: "control_sanitario_operativo",
-    weight: 4,
+    weight: 3,
     critical: true,
     commercialTag: "sin_control_temperatura",
     recommendedService: "Auditoría sanitaria",
     priority: "high"
   },
   {
-    id: 17,
-    text: "¿Cuentas con manuales de buenas prácticas de manufactura (BPM), procedimientos escritos o estándar de lavado de manos documentados?",
-    shortText: "Manuales de Procesos",
-    category: "procesos_calidad_inocuidad",
-    weight: 3,
-    critical: false,
-    commercialTag: "falta_manuales",
-    recommendedService: "Manuales y procedimientos",
-    priority: "medium"
-  },
-  {
-    id: 18,
-    text: "¿La distribución del local garantiza la separación física para evitar contaminación cruzada entre área sucia (desechos, lavado) y área limpia (preparación)?",
-    shortText: "Separación de Áreas",
-    category: "control_sanitario_operativo",
-    weight: 3,
-    critical: false,
-    commercialTag: "riesgo_operativo",
-    recommendedService: "Auditoría sanitaria",
-    priority: "medium"
-  },
-  {
-    id: 19,
-    text: "¿La apariencia operativa del negocio, orden de equipos, vestimenta del personal e higiene general transmiten total confianza al cliente final?",
-    shortText: "Higiene y Apariencia",
-    category: "control_sanitario_operativo",
-    weight: 2,
-    critical: false,
-    commercialTag: "brecha_experiencia_cliente",
-    recommendedService: "Auditoría de calidad operativa",
-    priority: "low"
-  },
-  {
-    id: 20,
-    text: "¿Cuentas con procesos establecidos para que la calidad analítica y de inocuidad se mantenga idéntica aun cuando haya alta rotación de personal?",
-    shortText: "Estándares de Calidad",
-    category: "procesos_calidad_inocuidad",
-    weight: 3,
-    critical: false,
-    commercialTag: "falta_estandarizacion",
-    recommendedService: "Manuales + capacitación",
-    priority: "medium"
-  },
-  {
-    id: 21,
-    text: "¿Cuentas con un proveedor certificado de control de plagas que entregue informes de dosificación, croquis de estaciones y recomendaciones técnicas?",
-    shortText: "Control de Plagas",
-    category: "control_sanitario_operativo",
-    weight: 3,
-    critical: false,
-    commercialTag: "falta_proveedor_plagas",
-    recommendedService: "Auditoría sanitaria",
-    priority: "medium"
-  },
-  {
     id: 22,
-    text: "¿Verificas y registras documentalmente la procedencia, lote y origen seguro de todas tus materias primas e insumos alimentarios?",
-    shortText: "Trazabilidad de Materias",
-    category: "procesos_calidad_inocuidad",
+    text: "¿Tiene expediente sanitario organizado?",
+    shortText: "Expediente Sanitario",
+    category: "permisologia_documental",
     weight: 3,
     critical: false,
-    commercialTag: "sin_trazabilidad",
-    recommendedService: "Manuales y procedimientos",
+    commercialTag: "expediente_desorganizado",
+    recommendedService: "Preparación de expediente",
     priority: "medium"
   },
   {
     id: 23,
-    text: "¿Están todos los alimentos almacenados debidamente rotulados con fecha de apertura/vencimiento, lote y con una rotación sistemática del tipo 'Primero en entrar, Primero en salir'?",
-    shortText: "Rotulación y Rotación",
-    category: "control_sanitario_operativo",
-    weight: 2,
+    text: "¿Tiene control de vencimientos de permisos, carnés y certificados?",
+    shortText: "Control de Vencimientos",
+    category: "permisologia_documental",
+    weight: 1,
     critical: false,
-    commercialTag: "falta_rotulacion",
-    recommendedService: "Auditoría de calidad operativa",
+    commercialTag: "sin_control_vencimientos",
+    recommendedService: "Jornadas recurrentes de personal",
     priority: "medium"
   },
   {
     id: 24,
-    text: "¿Cuenta el negocio con registros periódicos escrupulosos como lavado de tanques de agua, análisis microbiológico anual o cloro residual?",
-    shortText: "Calidad de Agua",
-    category: "control_sanitario_operativo",
-    weight: 3,
+    text: "Si produce alimentos empacados, ¿tiene Registro Sanitario vigente?",
+    shortText: "Registro Sanitario",
+    category: "permisologia_documental",
+    weight: 5,
     critical: true,
-    commercialTag: "falta_analisis_agua",
-    recommendedService: "Auditoría sanitaria",
+    commercialTag: "falta_registro_sanitario",
+    recommendedService: "Ruta Producto en Regla",
     priority: "high"
   },
   {
     id: 25,
-    text: "¿Cuentas con un procedimiento preestablecido para localizar, retener y retirar del mercado de forma acelerada cualquier producto que presente un riesgo sanitario?",
-    shortText: "Retiro de Productos",
-    category: "procesos_calidad_inocuidad",
-    weight: 2,
-    critical: false,
-    commercialTag: "sin_procedimiento_recall",
-    recommendedService: "Manuales y procedimientos",
-    priority: "low"
+    text: "Si es planta, ¿tiene Certificación de Planta vigente, cuando aplica?",
+    shortText: "Certificación de Planta",
+    category: "permisologia_documental",
+    weight: 5,
+    critical: true,
+    commercialTag: "falta_certificacion_planta",
+    recommendedService: "Ruta Planta Certificada",
+    priority: "high"
   }
 ];
 
@@ -330,3 +329,25 @@ export const SERVICES = [
   "Capacitación de personal",
   "Auditoría sanitaria"
 ];
+
+// Internally validate questions for type-safety and compliance
+QUESTIONS.forEach((q) => {
+  if (
+    q.id === undefined ||
+    !q.text ||
+    !q.shortText ||
+    q.weight === undefined ||
+    q.weight <= 0 ||
+    !q.category ||
+    !q.commercialTag ||
+    !q.recommendedService ||
+    !q.priority ||
+    q.critical === undefined
+  ) {
+    console.error(`ERROR: Pregunta incompleta detectada en QUESTIONS: ID ${q.id}`, q);
+  }
+  const genericTags = ["General", "Legal/Permisos", "Producto", "Transporte", "Procesos", "Calidad/Detección"];
+  if (genericTags.includes(q.commercialTag)) {
+    console.error(`ERROR: Pregunta ID ${q.id} tiene una etiqueta comercial genérica prohibida: ${q.commercialTag}`);
+  }
+});

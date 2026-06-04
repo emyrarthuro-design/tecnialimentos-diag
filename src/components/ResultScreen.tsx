@@ -180,15 +180,20 @@ export function ResultScreen({ businessData, answers }: ResultScreenProps) {
                 </span>
               </div>
               <div>
-                <div className="mt-2 flex items-baseline gap-1">
+                <div className="mt-2 flex flex-col">
                   {cat.percentage !== null ? (
                     <>
-                      <span className={`text-2xl font-black ${
-                        cat.percentage >= 80 ? 'text-green-600' : cat.percentage >= 50 ? 'text-amber-500' : 'text-red-500'
-                      }`}>
-                        {cat.percentage}%
+                      <div className="flex items-baseline gap-1">
+                        <span className={`text-2xl font-black ${
+                          cat.percentage >= 80 ? 'text-green-600' : cat.percentage >= 50 ? 'text-amber-500' : 'text-red-500'
+                        }`}>
+                          {cat.percentage}%
+                        </span>
+                        <span className="text-xs text-slate-400 font-medium">cumplimiento</span>
+                      </div>
+                      <span className="text-[11px] text-slate-500 font-medium block mt-1">
+                        Puntos: {cat.score} de {cat.maxPossible} aplicables
                       </span>
-                      <span className="text-xs text-slate-400 font-medium">cumplimiento</span>
                     </>
                   ) : (
                     <span className="text-xs font-medium text-slate-400 italic">No aplica para este diagnóstico</span>

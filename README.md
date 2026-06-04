@@ -21,11 +21,12 @@ El propósito central de esta herramienta es la captación de clientes de alto v
 
 1. **Bienvenida de Marca:** Mensaje introductorio libre de lenguaje alarmista que establece el valor del diagnóstico gratuito.
 2. **Formulario de Registro de Lead:** Captura de datos de contacto (nombre, empresa, cargo, whatsapp, correo) e información preliminar del negocio.
-3. **Cuestionario de 20 preguntas:** Preguntas interactivas agrupadas y diseñadas para mapear de manera amigable las responsabilidades sanitarias más comunes.
-4. **Pantalla de Resultados y Semáforo:** Visualización del puntaje de cumplimiento (0 a 100%) bajo niveles definidos (Alto, Medio, Crítico) y con un lenguaje prudente y consultivo.
-5. **Recomendación con IA:** Generación en tiempo real de sugerencias expertas contextualizadas mediante un modelo seguro de lenguaje (Gemini), redactado desde un tono mentor de apoyo comercial.
-6. **Línea Directa (CTA a WhatsApp):** Generación automática de un enlace cargado con un mensaje directo de WhatsApp para el equipo consultor detallando la empresa, nivel obtenido, puntaje y las 3 principales áreas a revisar.
-7. **Registro Asíncrono de Leads:** Envío automático del payload estructurado hacia la hoja de cálculo de Google Sheets.
+3. **Cuestionario de 25 preguntas (Matriz Ponderada):** Preguntas interactivas oficiales del Excel de autodiagnóstico técnico, ponderadas de 1 a 5 de acuerdo con su nivel de riesgo y normativa de respaldo (total máximo de 79 puntos base). Las opciones de respuesta contemplan *Sí*, *No*, *No estoy seguro* y *No aplica*.
+4. **Pantalla de Resultados y Semáforo:** Visualización del puntaje de cumplimiento ponderado en una escala de 0 a 100%, clasificado en tres niveles de cumplimiento (Nivel Alto, Nivel Medio y Revisión prioritaria recomendada) con lenguaje riguroso pero prudente.
+5. **Resultado por Áreas:** Desglose del cumplimiento en cada una de las 4 categorías principales: Permisología y cumplimiento documental; Personal manipulador; Control sanitario operativo; y Procesos, calidad e inocuidad.
+6. **Recomendación con IA:** Generación en tiempo real de sugerencias expertas mediante Google Gemini, enfocada en guiar al cliente sobre los pasos preventivos sugeridos.
+7. **Línea Directa (CTA a WhatsApp):** Generación de enlace hacia WhatsApp directo al equipo consultor (+507 6695-3832) detallando nombre de empresa, tipo de negocio, puntaje obtenido, nivel visible y principales 3 áreas a revisar.
+8. **Registro Asíncrono de Leads:** Envío continuo del diagnóstico comercial completo a Google Sheets.
 
 ---
 
@@ -84,7 +85,7 @@ La fila se añade de manera ordenada al final de la pestaña con exactamente est
 15. **Servicios sugeridos** - Servicios recomendados de Tecnialimentos en base a brechas identificadas.
 16. **Prioridad comercial** - Estimado de urgencia comercial calculada (Alta, Media, Baja).
 17. **Recomendación IA** - El texto con formato markdown redactado dinámicamente por la IA.
-18. **Respuestas completas JSON** - Diccionario plano con las respuestas de cada una de las 20 preguntas del cuestionario.
+18. **Respuestas completas JSON** - Estructura completa serializada en JSON que contiene un diccionario con las respuestas a las 25 preguntas, el desglose de `categoryScores` (puntuación y aplicable por área), la lista de `detectedBreaches` (cada brecha con ponderación, criticidad, tag comercial y servicio asociado), `totalRawScore` y `totalMaxPossibleScore`. Esto facilita análisis y segmentación comercial técnica en el backend.
 19. **Fuente** - Fijo en: `Diagnóstico gratuito web`.
 20. **Estado comercial** - Fijo al ingresar en: `Nuevo diagnóstico`.
 
@@ -113,6 +114,36 @@ Genera el reporte prudente y la retroalimentación cualitativa de experiencia us
 Se encarga de procesar los datos de entrada, calcular la prioridad comercial basada en la severidad de las brechas y persistir el registro en Google Sheets.
 - **Validación mínima obligatoria:** `contactName`, `companyName`, `whatsapp`, `email`, `businessType`, `scorePercentage`, `diagnosticLevel`, `topAreasToReview`, `commercialTags`, `recommendedServices` y `aiRecommendation`.
 - **Cero Interrupciones:** Si la conexión a la API de Google Sheets presenta problemas o no está configurada, el endpoint procesará un registro en consola y retornará exitosamente `{ success: true, stored: false }` para evitar caídas en la experiencia de usuario o la navegación web del cliente.
+
+---
+
+## Matemática de Scoring y Operación
+
+El autodiagnóstico calcula dinámicamente el cumplimiento técnico basándose exactamente en las siguientes directrices y fórmulas:
+
+### 1. Ponderaciones por Pregunta (Weights)
+Cada una de las 25 preguntas tiene asignado un puntaje de ponderación (`weight`) derivado de la matriz oficial del autodiagnóstico. En condiciones estándar donde todas las preguntas aplican, la sumatoria es de **79 puntos**.
+
+### 2. Tratamiento de Respuestas
+- **Sí:** Suma el 100% de la ponderación asignada a la pregunta (`weight`). Se incrementa tanto el score como el valor máximo posible.
+- **No estoy seguro:** Suma un **40%** de la ponderación asignada de manera preventiva. Se incrementa el score parcial (`weight * 0.4`) y el valor máximo total de la pregunta.
+- **No:** Suma **0** puntos al score, pero incrementa el total de puntos máximos posibles por el peso íntegro de la pregunta.
+- **No aplica:** **Se excluye en su totalidad**. Esto significa que ni aporta puntos al score obtenido ni se acumula en el total máximo aplicable de la fórmula.
+
+### 3. Fórmula de Cumplimiento
+El porcentaje de cumplimiento general y de cada categoría se calcula como:
+```
+scorePercentage = Math.round((Score / MaxPossibleScore) * 100)
+```
+En caso de que todas las preguntas sean marcadas como "No aplica" (lo que arroja puntos máximos = 0), el porcentaje resultante se establece en `0%` de manera estable.
+
+### 4. Segmentación Comercial y Brechas
+Cualquier respuesta calificada como *No* o *No estoy seguro* genera automáticamente una "Brecha Detectada". Éstas se ordenan bajo estrictas directrices comerciales:
+1. **Prioridad Comercial:** `high` > `medium` > `low`
+2. **Severidad:** Críticas (`critical: true`) primero.
+3. **Ponderación:** Mayor peso (`weight`) primero.
+
+El sistema utiliza las 3 principales brechas para la redacción del mensaje dinámico de WhatsApp y para sugerir directamente hasta 3 servicios específicos unificados (sin switches fijos, de forma automatizada por metadatos).
 
 ---
 

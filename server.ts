@@ -232,9 +232,18 @@ async function startServer() {
 
       if (spreadsheetId && clientEmail && privateKey) {
         try {
+          // Clean private key from potential quotes and replace escaped newlines
+          let cleanedKey = privateKey.trim();
+          if (cleanedKey.startsWith('"') && cleanedKey.endsWith('"')) {
+            cleanedKey = cleanedKey.substring(1, cleanedKey.length - 1);
+          } else if (cleanedKey.startsWith("'") && cleanedKey.endsWith("'")) {
+            cleanedKey = cleanedKey.substring(1, cleanedKey.length - 1);
+          }
+          cleanedKey = cleanedKey.replace(/\\n/g, "\n");
+
           const auth = new google.auth.JWT({
             email: clientEmail,
-            key: privateKey.replace(/\\n/g, "\n"),
+            key: cleanedKey,
             scopes: ["https://www.googleapis.com/auth/spreadsheets"]
           });
 
@@ -281,9 +290,28 @@ async function startServer() {
           
           stored = true;
           console.log(`[Google Sheets] Lead registrado exitosamente en la pestaña "${tabName}"`);
-        } catch (sheetsError) {
+        } catch (sheetsError: any) {
           // 11. Si Google Sheets falla, registrar el error solo en consola del servidor, no romper el flujo del usuario.
           console.error("Error al registrar lead en Google Sheets:", sheetsError);
+          
+          const isPermissionError = sheetsError?.message && (
+            sheetsError.message.includes("permission") || 
+            sheetsError.message.includes("caller does not have permission") ||
+            String(sheetsError.status) === "403"
+          );
+
+          if (isPermissionError) {
+            console.error("==================================================================================================================");
+            console.error("[CUIDADO] ALERTA DE CONFIGURACIÓN DE GOOGLE SHEETS: ERROR DE PERMISOS (403)");
+            console.error(`La cuenta de servicio "${clientEmail}" NO tiene permisos de acceso al Google Sheet actual.`);
+            console.error("CÓMO SOLUCIONARLO:");
+            console.error(`1. Abre tu Google Sheet con ID: "${spreadsheetId}"`);
+            console.error("2. Haz clic en el botón 'Compartir' (Share) arriba a la derecha.");
+            console.error(`3. Agrega el correo de la cuenta de servicio como 'Editor':`);
+            console.error(`   👉  ${clientEmail}  👈`);
+            console.error("4. Guarda el cambio. ¡Y listo! Vuelve a enviar el diagnóstico para verificar.");
+            console.error("==================================================================================================================");
+          }
         }
       } else {
         console.warn("[Google Sheets] Configuración incompleta. Lead no almacenado.");

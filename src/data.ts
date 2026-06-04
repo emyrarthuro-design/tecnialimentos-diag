@@ -123,10 +123,10 @@ export const QUESTIONS: Question[] = [
     shortText: "Fumigación",
     category: "control_sanitario_operativo",
     weight: 3,
-    critical: false,
+    critical: true,
     commercialTag: "falta_fumigacion",
     recommendedService: "Preparación para inspección",
-    priority: "medium"
+    priority: "high"
   },
   {
     id: 9,
@@ -156,10 +156,10 @@ export const QUESTIONS: Question[] = [
     shortText: "Químicos Aptos",
     category: "control_sanitario_operativo",
     weight: 3,
-    critical: false,
+    critical: true,
     commercialTag: "quimicos_no_aptos",
     recommendedService: "Auditoría sanitaria",
-    priority: "medium"
+    priority: "high"
   },
   {
     id: 12,
@@ -224,7 +224,7 @@ export const QUESTIONS: Question[] = [
     weight: 3,
     critical: false,
     commercialTag: "proveedores_no_aprobados",
-    recommendedService: "Manuales y procedimientos",
+    recommendedService: "Auditoría sanitaria",
     priority: "medium"
   },
   {
@@ -290,7 +290,7 @@ export const QUESTIONS: Question[] = [
     weight: 1,
     critical: false,
     commercialTag: "sin_control_vencimientos",
-    recommendedService: "Jornadas recurrentes de personal",
+    recommendedService: "Seguimiento documental recurrente",
     priority: "medium"
   },
   {
@@ -327,7 +327,8 @@ export const SERVICES = [
   "Jornadas de Personal en Regla",
   "Manuales y procedimientos",
   "Capacitación de personal",
-  "Auditoría sanitaria"
+  "Auditoría sanitaria",
+  "Seguimiento documental recurrente"
 ];
 
 // Internally validate questions for type-safety and compliance

@@ -1,4 +1,5 @@
 export type AppState = 
+  | 'landing'
   | 'welcome' 
   | 'captureInfo' 
   | 'diagnostic' 

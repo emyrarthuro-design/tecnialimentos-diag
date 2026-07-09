@@ -416,14 +416,13 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
                 <FileCheck className="w-5.5 h-5.5" />
               </div>
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-1 block">Opera legalmente y con respaldo sanitario.</span>
               <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Licencia Sanitaria de Funcionamiento</h4>
               <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
-                Gestionamos tu Licencia Sanitaria de Funcionamiento para que tu negocio cumpla con los requisitos del MINSA, esté preparado para inspecciones y pueda desarrollar sus actividades de forma legal y segura.
+                La Licencia Sanitaria de Funcionamiento es la autorización emitida por el MINSA que certifica que un establecimiento cumple con las condiciones sanitarias requeridas para desarrollar actividades relacionadas con la producción, procesamiento, almacenamiento, distribución o comercialización de alimentos.
               </p>
               <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
-                <p><strong className="text-slate-700">Qué es:</strong> Es la autorización emitida por el Ministerio de Salud que certifica que un establecimiento de alimentos cumple con las condiciones sanitarias exigidas para operar.</p>
-                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Todo establecimiento que produzca, procese, prepare, manipule, envase, almacene, distribuya, importe o comercialice alimentos, según la normativa aplicable.</p>
-                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Revisamos requisitos, preparamos documentación, gestionamos el trámite y acompañamos el proceso hasta la obtención de la licencia.</p>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Revisamos los requisitos aplicables, preparamos la documentación, organizamos el expediente y acompañamos el proceso ante la autoridad sanitaria.</p>
               </div>
             </div>
 
@@ -432,13 +431,13 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
                 <Settings className="w-5.5 h-5.5" />
               </div>
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-1 block">Demuestra que tu planta cumple con los requisitos de infraestructura e inocuidad.</span>
               <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Certificación de Planta</h4>
               <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
-                Acredita que tu planta cumple con las condiciones sanitarias exigidas por el MINSA para producir, procesar o envasar alimentos de forma segura y conforme a la normativa vigente.
+                La Certificación de Planta acredita que una instalación de alimentos cumple con las condiciones higiénico-sanitarias, las Buenas Prácticas de Manufactura (BPM) y los controles de inocuidad necesarios para garantizar procesos seguros y conformes con la normativa sanitaria vigente.
               </p>
               <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
-                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Empresas de productos cárnicos, lácteos, alimentos diversos, suplementos alimenticios, productos pesqueros, acuícolas y otras plantas de procesamiento sujetas a control sanitario.</p>
-                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Realizamos diagnóstico técnico, verificamos cumplimiento, elaboramos documentación requerida y gestionamos el trámite.</p>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Realizamos un diagnóstico técnico de la planta, verificamos brechas de cumplimiento, elaboramos la documentación requerida y acompañamos la gestión del trámite.</p>
               </div>
             </div>
 
@@ -447,21 +446,13 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
                 <ClipboardList className="w-5.5 h-5.5" />
               </div>
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-1 block">Comercializa tus productos de forma legal en Panamá.</span>
               <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Registro Sanitario</h4>
               <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
-                Obtén la autorización sanitaria que permite comercializar alimentos de forma legal en Panamá, garantizando el cumplimiento de la normativa vigente.
+                El Registro Sanitario es la autorización que permite la fabricación, importación y comercialización de alimentos, garantizando que el producto cumple con los requisitos técnicos, de inocuidad y de etiquetado establecidos por la normativa sanitaria.
               </p>
               <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
-                <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Fabricantes, importadores y empresas que elaboran o comercializan alimentos y suplementos alimenticios que requieren autorización sanitaria antes de su venta.</p>
-                <div className="pt-1">
-                  <p className="font-bold text-slate-700 mb-1">Beneficios:</p>
-                  <ul className="list-disc list-inside space-y-0.5">
-                    <li>Autoriza la comercialización legal.</li>
-                    <li>Demuestra cumplimiento sanitario.</li>
-                    <li>Genera confianza ante clientes y distribuidores.</li>
-                    <li>Vigencia de 5 años con opción de renovación.</li>
-                  </ul>
-                </div>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Preparamos y validamos la documentación técnica, revisamos requisitos de producto, apoyamos la organización del expediente y damos seguimiento al trámite ante la autoridad sanitaria.</p>
               </div>
             </div>
 
@@ -554,17 +545,18 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               </div>
             </div>
 
-            {/* Service 9: Constancia de Inspección Sanitaria para Establecimientos de Bajo Riesgo */}
+            {/* Service 9: Constancia de Inspección Sanitaria */}
             <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
               <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
                 <FileText className="w-5.5 h-5.5" />
               </div>
-              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Inspección para Locales de Bajo Riesgo</h4>
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-1 block">Cumple con los requisitos sanitarios para operar con tranquilidad.</span>
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Constancia de Inspección Sanitaria</h4>
               <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
-                Obtén la constancia que acredita que tu negocio cumple con los requisitos sanitarios para la preparación, manipulación y expendio de alimentos.
+                La Constancia de Inspección Sanitaria es el documento emitido por las Direcciones Regionales de Control de Alimentos y Vigilancia Veterinaria que acredita que un establecimiento de interés sanitario de bajo riesgo o un servicio de transporte de alimentos cumple con los requisitos sanitarios exigidos para desarrollar sus actividades.
               </p>
               <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
-                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Mercados, productores artesanales, ferias, puestos de venta, fondas, kioscos, refresquerías, cocinas, comedores no industriales, hostales, cabañas y otros establecimientos donde se preparen, manipulen o expendan alimentos.</p>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Evaluamos las condiciones del establecimiento o servicio, identificamos los requisitos aplicables, preparamos la documentación necesaria y acompañamos el proceso de inspección o renovación.</p>
               </div>
             </div>
           </div>

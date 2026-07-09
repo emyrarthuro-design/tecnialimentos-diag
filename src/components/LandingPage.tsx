@@ -75,10 +75,30 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
+          {/* Centered larger logo element with higher presence */}
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center mb-8"
+          >
+            <div className="flex items-center justify-center w-[320px] sm:w-[520px] md:w-[640px] transition-transform hover:scale-102">
+              <img 
+                src="https://lh3.googleusercontent.com/d/1cnqvgf36HHvAi9mXHU-Ywua33mhFTncB" 
+                alt="Logo Tecnialimentos Grande" 
+                className="w-full h-auto object-contain" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <span className="mt-6 text-base sm:text-lg md:text-xl font-bold text-blue-900 tracking-normal bg-blue-50 border border-blue-100/80 px-6 py-3 rounded-full shadow-xs">
+              Soluciones sanitarias para negocios de alimentos en Panamá
+            </span>
+          </motion.div>
+
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
           >
             <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 font-bold text-xs px-3.5 py-1.5 rounded-full border border-blue-100 mb-6 tracking-wide">
               <ShieldCheck className="w-4 h-4" /> Consultoría Sanitaria Especializada en Panamá

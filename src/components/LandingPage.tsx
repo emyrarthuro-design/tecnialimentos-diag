@@ -18,7 +18,14 @@ import {
   BookOpen,
   Award,
   MapPin,
-  Activity
+  Activity,
+  Utensils,
+  Factory,
+  GlassWater,
+  Hotel,
+  Bike,
+  Store,
+  Package
 } from "lucide-react";
 
 interface LandingPageProps {
@@ -304,6 +311,42 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
         </div>
       </section>
 
+      {/* Sección "Ideal Para" */}
+      <section className="py-16 px-6 bg-slate-50 border-b border-slate-200/60">
+        <div className="max-w-5xl mx-auto text-center">
+          <span className="text-xs font-bold uppercase text-blue-600 tracking-wider mb-2 block">Segmentos que atendemos</span>
+          <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-3 tracking-tight">
+            Diseñado para negocios de alimentos que necesitan operar con mayor orden y cumplimiento
+          </h2>
+          <p className="text-sm sm:text-base text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+            Tecnialimentos acompaña a diferentes tipos de operaciones alimentarias en permisos, documentación, procesos, capacitación y preparación ante inspecciones.
+          </p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {[
+              { label: "Restaurantes y cafeterías", icon: Utensils },
+              { label: "Plantas procesadoras", icon: Factory },
+              { label: "Distribuidoras de alimentos", icon: Truck },
+              { label: "Marcas de alimentos empacados", icon: Package },
+              { label: "Catering y eventos", icon: GlassWater },
+              { label: "Hoteles y hospedajes", icon: Hotel },
+              { label: "Servicios de delivery", icon: Bike },
+              { label: "Comercios gastronómicos", icon: Store }
+            ].map((item, i) => {
+              const IconComponent = item.icon;
+              return (
+                <div key={i} className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200/80 shadow-3xs flex flex-col items-center text-center transition-all hover:shadow-xs hover:border-blue-400 group">
+                  <div className="w-9 h-9 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                    <IconComponent className="w-4.5 h-4.5" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-slate-700 leading-tight">{item.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* 4. Sección Diagnóstico */}
       <section id="diagnostico" className="py-20 px-6 bg-slate-50">
         <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm flex flex-col md:flex-row">
@@ -369,15 +412,15 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Service 1: Licencia Sanitaria de Funcionamiento */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <FileCheck className="w-6 h-6" />
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <FileCheck className="w-5.5 h-5.5" />
               </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Licencia Sanitaria de Funcionamiento</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Licencia Sanitaria de Funcionamiento</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
                 Gestionamos tu Licencia Sanitaria de Funcionamiento para que tu negocio cumpla con los requisitos del MINSA, esté preparado para inspecciones y pueda desarrollar sus actividades de forma legal y segura.
               </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
                 <p><strong className="text-slate-700">Qué es:</strong> Es la autorización emitida por el Ministerio de Salud que certifica que un establecimiento de alimentos cumple con las condiciones sanitarias exigidas para operar.</p>
                 <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Todo establecimiento que produzca, procese, prepare, manipule, envase, almacene, distribuya, importe o comercialice alimentos, según la normativa aplicable.</p>
                 <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Revisamos requisitos, preparamos documentación, gestionamos el trámite y acompañamos el proceso hasta la obtención de la licencia.</p>
@@ -385,34 +428,34 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
             </div>
 
             {/* Service 2: Certificación de Planta */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <Settings className="w-6 h-6" />
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <Settings className="w-5.5 h-5.5" />
               </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Certificación de Planta</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Certificación de Planta</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
                 Acredita que tu planta cumple con las condiciones sanitarias exigidas por el MINSA para producir, procesar o envasar alimentos de forma segura y conforme a la normativa vigente.
               </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
                 <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Empresas de productos cárnicos, lácteos, alimentos diversos, suplementos alimenticios, productos pesqueros, acuícolas y otras plantas de procesamiento sujetas a control sanitario.</p>
                 <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Realizamos diagnóstico técnico, verificamos cumplimiento, elaboramos documentación requerida y gestionamos el trámite.</p>
               </div>
             </div>
 
             {/* Service 3: Registro Sanitario */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <ClipboardList className="w-6 h-6" />
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <ClipboardList className="w-5.5 h-5.5" />
               </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Registro Sanitario</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Registro Sanitario</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
                 Obtén la autorización sanitaria que permite comercializar alimentos de forma legal en Panamá, garantizando el cumplimiento de la normativa vigente.
               </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
                 <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Fabricantes, importadores y empresas que elaboran o comercializan alimentos y suplementos alimenticios que requieren autorización sanitaria antes de su venta.</p>
                 <div className="pt-1">
                   <p className="font-bold text-slate-700 mb-1">Beneficios:</p>
-                  <ul className="list-disc list-inside space-y-0.5 text-slate-500">
+                  <ul className="list-disc list-inside space-y-0.5">
                     <li>Autoriza la comercialización legal.</li>
                     <li>Demuestra cumplimiento sanitario.</li>
                     <li>Genera confianza ante clientes y distribuidores.</li>
@@ -422,84 +465,18 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               </div>
             </div>
 
-            {/* Service 4: Constancia de Inspección Sanitaria para Transporte */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <Truck className="w-6 h-6" />
+            {/* Service 4: Sistema Documental de Inocuidad */}
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <BookOpen className="w-5.5 h-5.5" />
               </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Inspección Sanitaria para Transporte de Alimentos</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Acredita que tu servicio de transporte cumple con los requisitos sanitarios exigidos para el traslado seguro de alimentos y productos regulados.
-              </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
-                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Transporte terrestre de alimentos, servicios de delivery de alimentos listos para consumo y transporte de productos higiénicos sujetos a control sanitario.</p>
-                <div className="pt-1">
-                  <p className="font-bold text-slate-700 mb-1">Beneficios:</p>
-                  <ul className="list-disc list-inside space-y-0.5 text-slate-500">
-                    <li>Cumplimiento ante MINSA.</li>
-                    <li>Respaldo durante inspecciones en vía.</li>
-                    <li>Mayor confianza en la inocuidad durante el transporte.</li>
-                    <li>Vigencia de 3 años, con opción de renovación.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Service 5: Constancia de Inspección para Establecimientos de Bajo Riesgo */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <FileText className="w-6 h-6" />
-              </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Inspección para Locales de Bajo Riesgo</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Obtén la constancia que acredita que tu negocio cumple con los requisitos sanitarios para la preparación, manipulación y expendio de alimentos.
-              </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
-                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Mercados, productores artesanales, ferias, puestos de venta, fondas, kioscos, refresquerías, cocinas, comedores no industriales, hostales, cabañas y otros establecimientos donde se preparen, manipulen o expendan alimentos.</p>
-              </div>
-            </div>
-
-            {/* Service 6: Carnet Blanco */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <Award className="w-6 h-6" />
-              </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Carnet Blanco (Salud)</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Obtén el certificado que acredita que el manipulador de alimentos cumple con las condiciones de salud requeridas para desempeñar sus funciones de forma segura.
-              </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
-                <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Toda persona que manipule, prepare, procese, transporte o comercialice alimentos en establecimientos de interés sanitario.</p>
-                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Orientamos sobre requisitos, coordinamos el proceso y damos seguimiento para que tu personal obtenga su Carnet Blanco de forma oportuna.</p>
-              </div>
-            </div>
-
-            {/* Service 7: Carnet Verde */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <GraduationCap className="w-6 h-6" />
-              </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Carnet Verde (Capacitación)</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Certifica que el manipulador de alimentos ha recibido la capacitación sanitaria necesaria para aplicar buenas prácticas de higiene e inocuidad.
-              </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
-                <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Manipuladores de alimentos que deban demostrar capacitación oficial en manipulación higiénica de alimentos. Se obtiene después del Carnet Blanco y de completar la capacitación correspondiente.</p>
-              </div>
-            </div>
-
-            {/* Service 8: Sistema Documental de Inocuidad */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <BookOpen className="w-6 h-6" />
-              </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Sistema Documental de Inocuidad</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Sistema Documental de Inocuidad</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
                 Creamos la documentación que tu empresa necesita para cumplir con la normativa sanitaria y gestionar la inocuidad de forma organizada y eficiente.
               </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
                 <p className="font-bold text-slate-700">Incluye:</p>
-                <ul className="list-disc list-inside space-y-0.5 text-slate-500">
+                <ul className="list-disc list-inside space-y-0.5">
                   <li>Manual de BPM (Buenas Prácticas de Manufactura).</li>
                   <li>Procedimientos SSOP (Sanitización estándar).</li>
                   <li>Plan HACCP personalizado.</li>
@@ -509,19 +486,85 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               </div>
             </div>
 
-            {/* Service 9: Capacitación en Inocuidad Alimentaria */}
-            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
-                <Users className="w-6 h-6" />
+            {/* Service 5: Capacitación en Inocuidad Alimentaria */}
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <Users className="w-5.5 h-5.5" />
               </div>
-              <h4 className="text-xl font-bold text-blue-900 mb-3">Capacitación en Inocuidad Alimentaria</h4>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Capacitación en Inocuidad Alimentaria</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
                 Fortalece las competencias de tu equipo con programas de capacitación diseñados para cumplir con los requisitos del MINSA, mejorar la inocuidad y promover una cultura de cumplimiento.
               </p>
-              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
                 <p><strong className="text-slate-700">Temas posibles:</strong> BPM, HACCP, Limpieza y desinfección, Control de temperaturas, Manejo integrado de plagas, Alérgenos, Contaminación cruzada.</p>
                 <p><strong className="text-slate-700">Cumplimiento normativo:</strong> El MINSA solicita que los establecimientos mantengan un programa documentado de capacitación, realizando al menos dos capacitaciones al año y conservando la evidencia para inspecciones.</p>
                 <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Diseñamos un Plan Anual de Capacitación, impartimos capacitaciones, elaboramos material de apoyo y entregamos listas de asistencia, evaluaciones y constancias oficiales.</p>
+              </div>
+            </div>
+
+            {/* Service 6: Carnet Blanco */}
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <Award className="w-5.5 h-5.5" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Carnet Blanco (Salud)</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                Obtén el certificado que acredita que el manipulador de alimentos cumple con las condiciones de salud requeridas para desempeñar sus funciones de forma segura.
+              </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+                <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Toda persona que manipule, prepare, procese, transporte o comercialice alimentos en establecimientos de interés sanitario.</p>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Orientamos sobre requisitos, coordinamos el proceso y damos seguimiento para que tu personal obtenga su Carnet Blanco de forma oportuna.</p>
+              </div>
+            </div>
+
+            {/* Service 7: Carnet Verde */}
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <GraduationCap className="w-5.5 h-5.5" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Carnet Verde (Capacitación)</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                Certifica que el manipulador de alimentos ha recibido la capacitación sanitaria necesaria para aplicar buenas prácticas de higiene e inocuidad.
+              </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+                <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Manipuladores de alimentos que deban demostrar capacitación oficial en manipulación higiénica de alimentos. Se obtiene después del Carnet Blanco y de completar la capacitación correspondiente.</p>
+              </div>
+            </div>
+
+            {/* Service 8: Constancia de Inspección Sanitaria para Transporte de Alimentos */}
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <Truck className="w-5.5 h-5.5" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Constancia de Inspección para Transporte</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                Acredita que tu servicio de transporte cumple con los requisitos sanitarios exigidos para el traslado seguro de alimentos y productos regulados.
+              </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Transporte terrestre de alimentos, servicios de delivery de alimentos listos para consumo y transporte de productos higiénicos sujetos a control sanitario.</p>
+                <div className="pt-1">
+                  <p className="font-bold text-slate-700 mb-1">Beneficios:</p>
+                  <ul className="list-disc list-inside space-y-0.5">
+                    <li>Cumplimiento ante MINSA.</li>
+                    <li>Respaldo durante inspecciones en vía.</li>
+                    <li>Mayor confianza en la inocuidad durante el transporte.</li>
+                    <li>Vigencia de 3 años, con opción de renovación.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Service 9: Constancia de Inspección Sanitaria para Establecimientos de Bajo Riesgo */}
+            <div className="bg-slate-50 border border-slate-200/80 p-5 sm:p-6 md:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <FileText className="w-5.5 h-5.5" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-bold text-blue-900 mb-2.5">Inspección para Locales de Bajo Riesgo</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                Obtén la constancia que acredita que tu negocio cumple con los requisitos sanitarios para la preparación, manipulación y expendio de alimentos.
+              </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Mercados, productores artesanales, ferias, puestos de venta, fondas, kioscos, refresquerías, cocinas, comedores no industriales, hostales, cabañas y otros establecimientos donde se preparen, manipulen o expendan alimentos.</p>
               </div>
             </div>
           </div>
@@ -640,6 +683,18 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Franja de confianza */}
+      <section className="py-12 px-6 bg-blue-50/50 border-t border-b border-blue-100 text-center">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-600 border border-blue-100 shadow-3xs shrink-0">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <p className="text-sm sm:text-base md:text-lg font-medium text-blue-900 max-w-2xl text-center sm:text-left leading-relaxed">
+            Aliados de la industria de alimentos y bebidas en Panamá. Diseñamos soluciones prácticas que facilitan tu operación diaria y fortalecen tu cumplimiento sanitario.
+          </p>
         </div>
       </section>
 

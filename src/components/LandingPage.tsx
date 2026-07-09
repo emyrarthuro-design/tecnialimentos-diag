@@ -1,4 +1,5 @@
-import { motion } from "motion/react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   ArrowRight, 
   ShieldCheck, 
@@ -10,7 +11,14 @@ import {
   Truck, 
   CheckCircle2, 
   HelpCircle, 
-  Phone 
+  Phone,
+  ChevronDown,
+  ChevronUp,
+  GraduationCap,
+  BookOpen,
+  Award,
+  MapPin,
+  Activity
 } from "lucide-react";
 
 interface LandingPageProps {
@@ -18,6 +26,8 @@ interface LandingPageProps {
 }
 
 export function LandingPage({ onStartQuiz }: LandingPageProps) {
+  const [activeProcess, setActiveProcess] = useState<number | null>(null);
+
   // Smooth scroll helper
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -26,9 +36,95 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
     }
   };
 
+  // Trámites y Procesos de acompañamiento data
+  const processes = [
+    {
+      id: "lsf",
+      title: "Licencia Sanitaria de Funcionamiento",
+      steps: [
+        "Envío de propuesta personalizada.",
+        "Solicitud de aviso de operaciones y documentos iniciales.",
+        "Factura de arranque del trámite.",
+        "Auditoría técnica interna y aplicación de correcciones.",
+        "Elaboración de expediente completo y manuales específicos.",
+        "Seguimiento activo ante el MINSA, inspección oficial, aprobación y emisión de la licencia."
+      ]
+    },
+    {
+      id: "cp",
+      title: "Certificación de Planta",
+      steps: [
+        "Propuesta técnica y recopilación de documentación inicial.",
+        "Auditoría técnica de diagnóstico en sitio.",
+        "Correcciones de infraestructura, procesos y armado del expediente.",
+        "Elaboración de manuales específicos y pagos correspondientes.",
+        "Evaluación técnica y coordinación de la inspección oficial del MINSA.",
+        "Acompañamiento en inspección y obtención de la certificación."
+      ]
+    },
+    {
+      id: "rs",
+      title: "Registro Sanitario",
+      steps: [
+        "Propuesta técnica comercial por producto o categoría.",
+        "Solicitud de fichas técnicas, fórmulas y documentos de respaldo.",
+        "Pago de timbres de registro y gestión de análisis de laboratorios.",
+        "Elaboración de expediente completo y envío formal a las autoridades.",
+        "Evaluación técnica, seguimiento y subsanación de observaciones.",
+        "Emisión y entrega del registro sanitario oficial."
+      ]
+    },
+    {
+      id: "ta",
+      title: "Transporte de Alimentos",
+      steps: [
+        "Propuesta técnica para vehículos o flota de distribución.",
+        "Recopilación de requisitos de vehículos y armado del expediente.",
+        "Envío de expediente técnico formal a las autoridades correspondientes.",
+        "Evaluación e inspección física de las unidades de transporte.",
+        "Aprobación de los controles de temperatura y limpieza de las unidades.",
+        "Emisión de la licencia sanitaria de transporte o constancia oficial."
+      ]
+    },
+    {
+      id: "cis",
+      title: "Constancia de Inspección Sanitaria",
+      steps: [
+        "Propuesta comercial de acuerdo con el tipo de establecimiento.",
+        "Recopilación de documentación operativa preliminar.",
+        "Auditoría interna rápida y recomendaciones de mejora.",
+        "Preparación de expediente de inspección y formatos internos.",
+        "Evaluación o inspección en sitio por parte de las autoridades.",
+        "Emisión formal y entrega al cliente de la constancia de inspección."
+      ]
+    },
+    {
+      id: "cb",
+      title: "Carnet Blanco",
+      steps: [
+        "Coordinación y programación de la jornada de salud.",
+        "Toma de muestras de laboratorio, revisión médica general y pagos.",
+        "Pago oficial de derechos de trámite al MINSA.",
+        "Retiro de carnet tramitado y verificado por la autoridad.",
+        "Revisión de vigencia y entrega directa de carnets al cliente."
+      ]
+    },
+    {
+      id: "cv",
+      title: "Carnet Verde",
+      steps: [
+        "Coordinación de la jornada de capacitación técnica obligatoria.",
+        "Impartición de la capacitación sanitaria y aplicación de examen.",
+        "Armado de expedientes individuales con fotos, carnet blanco y evaluación.",
+        "Entrega de documentos físicos, sustentación y pago de expedientes al MINSA.",
+        "Retiro de carnets verdes emitidos y entrega final para el personal."
+      ]
+    }
+  ];
+
   return (
     <div className="w-full bg-slate-50 min-h-screen text-slate-800 font-sans">
-      {/* 1. Header (Floating or sticky-like container) */}
+      {/* 1. Header */}
       <nav id="inicio" className="bg-white border-b border-slate-100 px-4 sm:px-8 py-4 sticky top-0 z-50 shadow-xs">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -52,7 +148,8 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
             <button onClick={() => scrollToSection("problema")} className="hover:text-blue-600 transition-colors cursor-pointer">Por Qué Nosotros</button>
             <button onClick={() => scrollToSection("diagnostico")} className="hover:text-blue-600 transition-colors cursor-pointer">Diagnóstico</button>
             <button onClick={() => scrollToSection("servicios")} className="hover:text-blue-600 transition-colors cursor-pointer">Servicios</button>
-            <button onClick={() => scrollToSection("proceso")} className="hover:text-blue-600 transition-colors cursor-pointer">Proceso</button>
+            <button onClick={() => scrollToSection("tramites")} className="hover:text-blue-600 transition-colors cursor-pointer">Trámites</button>
+            <button onClick={() => scrollToSection("proceso")} className="hover:text-blue-600 transition-colors cursor-pointer">Metodología</button>
           </div>
 
           <button 
@@ -67,7 +164,7 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
 
       {/* 2. Hero Section */}
       <header className="relative bg-gradient-to-br from-white via-slate-50 to-blue-50 py-16 sm:py-24 px-6 overflow-hidden">
-        {/* Subtle geometric line details inspired by the horizontal lines of the logo */}
+        {/* Subtle geometric line details inspired by the logo */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
           <div className="absolute top-1/4 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-600 to-transparent" />
           <div className="absolute top-1/3 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-200 to-transparent" />
@@ -111,7 +208,7 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-blue-900 tracking-tight leading-tight mb-6"
           >
-            Cumple, ordena y prepara tu negocio de alimentos con acompañamiento técnico especializado
+            Cumple, ordena y prepara tu negocio de alimentos con acompañamiento técnico sanitario
           </motion.h1>
 
           <motion.p 
@@ -120,7 +217,7 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg sm:text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto mb-10"
           >
-            Tecnialimentos ayuda a restaurantes, plantas, distribuidores, marcas de alimentos y negocios gastronómicos a validar permisos, documentación sanitaria, procesos e inocuidad antes de trámites, inspecciones o crecimiento operativo.
+            Tecnialimentos ayuda a restaurantes, plantas, distribuidores, marcas de alimentos y negocios gastronómicos en Panamá a revisar permisos, documentación sanitaria, personal manipulador, controles de inocuidad, registros y procesos antes de trámites, inspecciones o crecimiento operativo.
           </motion.p>
 
           <motion.div 
@@ -158,7 +255,7 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
         </div>
       </header>
 
-      {/* 3. Sección Problema */}
+      {/* 3. Sección "Por Qué Nosotros" */}
       <section id="problema" className="py-20 px-6 bg-white border-y border-slate-100">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -171,33 +268,36 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Card 1 */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-3xs transition-transform hover:-translate-y-1">
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
                 <FileCheck className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-blue-900 mb-3">Permisos y documentación</h3>
+              <h3 className="text-xl font-bold text-blue-900 mb-3 font-display">Permisos y documentación</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Mantenemos al día desde tu aviso de operación firmado hasta la Licencia Sanitaria de Funcionamiento necesaria para operar de manera conforme.
+                Nos aseguramos de que tus permisos y documentación sanitaria estén completos, actualizados y listos para que tu negocio opere con cumplimiento y tranquilidad.
               </p>
             </div>
 
+            {/* Card 2 */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-3xs transition-transform hover:-translate-y-1">
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-blue-900 mb-3">Personal manipulador</h3>
+              <h3 className="text-xl font-bold text-blue-900 mb-3 font-display">Personal manipulador</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Evita sanciones graves garantizando que 100% de tu personal tenga vigente su carné blanco y su carné verde de manipulación técnica.
+                Mantén a tu equipo preparado y en cumplimiento con la normativa sanitaria. Te acompañamos en el control y seguimiento de los requisitos que deben cumplir los manipuladores de alimentos para garantizar una operación segura.
               </p>
             </div>
 
+            {/* Card 3 */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-3xs transition-transform hover:-translate-y-1">
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
                 <Settings className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-blue-900 mb-3">Controles sanitarios y procesos</h3>
+              <h3 className="text-xl font-bold text-blue-900 mb-3 font-display">Controles sanitarios y procesos</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Asegura el control riguroso de plagas, fumigaciones certificadas, registros diarios de limpieza y temperatura, indispensables frente a MINSA.
+                Fortalecemos los controles que garantizan la inocuidad de tus alimentos: temperaturas, recepción de materias primas, control del aceite, limpieza y desinfección, registros operativos y, como parte del sistema, el programa de control de plagas y fumigaciones certificadas.
               </p>
             </div>
           </div>
@@ -210,18 +310,23 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
           <div className="p-8 md:p-12 md:w-1/2 flex flex-col justify-center">
             <span className="text-xs font-bold uppercase text-blue-600 tracking-wider mb-2">Herramienta Gratuita</span>
             <h2 className="text-3xl font-bold text-blue-900 mb-4">
-              Empieza con un autodiagnóstico inicial
+              Empieza con un autodiagnóstico
             </h2>
             <p className="text-slate-600 leading-relaxed mb-6">
-              Responde un diagnóstico rápido y conoce qué áreas conviene revisar en tu negocio: permisos, documentación, personal manipulador, fumigación, controles sanitarios, manuales, registros y preparación ante inspecciones.
+              Completa una evaluación rápida y descubre si tu negocio está preparado para cumplir con los requisitos sanitarios. Identifica brechas en permisos, documentación, personal manipulador, controles de inocuidad, registros y procesos antes de que se conviertan en un problema.
             </p>
-            <button 
-              onClick={onStartQuiz}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-sm active:scale-[0.98] cursor-pointer"
-            >
-              Iniciar diagnóstico gratuito
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="mb-6">
+              <button 
+                onClick={onStartQuiz}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-sm active:scale-[0.98] cursor-pointer"
+              >
+                Iniciar diagnóstico gratuito
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-xs text-slate-500 italic mt-2">
+              Convierte tu diagnóstico en un plan de acción. Te ayudamos a pasar del diagnóstico a la implementación, con soluciones prácticas y acompañamiento técnico en cada etapa del proceso.
+            </p>
           </div>
           
           <div className="bg-gradient-to-br from-blue-900 to-blue-950 p-8 md:p-12 md:w-1/2 text-white flex flex-col justify-center border-t md:border-t-0 md:border-l border-slate-100 relative">
@@ -233,11 +338,11 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
             <h3 className="text-lg font-bold text-slate-200 mb-6 tracking-wide uppercase">¿Qué incluye la evaluación?</h3>
             <ul className="space-y-4">
               {[
-                "25 preguntas ponderadas específicas de Panamá",
-                "Resultado general detallado por categoría",
-                "Brechas principales críticas identificadas en tiempo real",
-                "Recomendación orientativa generada con IA",
-                "Siguiente paso sugerido y enlace directo de asesoramiento"
+                "25 preguntas basadas en los requisitos sanitarios aplicables en Panamá.",
+                "Diagnóstico por categorías, con una visión clara del nivel de cumplimiento de tu negocio.",
+                "Identificación de brechas críticas que requieren atención inmediata.",
+                "Recomendaciones personalizadas para fortalecer el cumplimiento sanitario.",
+                "Plan de acción sugerido con la opción de recibir asesoría especializada de Tecnialimentos."
               ].map((item, i) => (
                 <li key={i} className="flex gap-3 items-start">
                   <CheckCircle2 className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
@@ -251,127 +356,294 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
 
       {/* 5. Sección Servicios */}
       <section id="servicios" className="py-20 px-6 bg-white border-y border-slate-100">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-xs font-bold uppercase text-blue-600 tracking-wider mb-2 block">Nuestras Soluciones Corporativas</span>
             <h2 className="text-3xl font-bold text-blue-900">
               Servicios que pueden ayudarte después del diagnóstico
             </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto mt-4 leading-relaxed">
-              Brindamos cobertura total a tus necesidades técnicas de cumplimiento alimentario con consultores de alta trayectoria.
+            <p className="text-slate-600 max-w-3xl mx-auto mt-4 leading-relaxed">
+              Te acompañamos en permisos, registros, documentación, auditorías, capacitación y controles sanitarios para que tu negocio opere con mayor orden, cumplimiento y trazabilidad.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Service Cards */}
-            <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl flex flex-col hover:border-blue-300 transition-colors">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
-                <FileCheck className="w-5 h-5" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Service 1: Licencia Sanitaria de Funcionamiento */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <FileCheck className="w-6 h-6" />
               </div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">Licencia Sanitaria de Funcionamiento</h4>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4 flex-1">
-                Para negocios que necesitan operar con documentación sanitaria alineada a su actividad real.
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Licencia Sanitaria de Funcionamiento</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Gestionamos tu Licencia Sanitaria de Funcionamiento para que tu negocio cumpla con los requisitos del MINSA, esté preparado para inspecciones y pueda desarrollar sus actividades de forma legal y segura.
               </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p><strong className="text-slate-700">Qué es:</strong> Es la autorización emitida por el Ministerio de Salud que certifica que un establecimiento de alimentos cumple con las condiciones sanitarias exigidas para operar.</p>
+                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Todo establecimiento que produzca, procese, prepare, manipule, envase, almacene, distribuya, importe o comercialice alimentos, según la normativa aplicable.</p>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Revisamos requisitos, preparamos documentación, gestionamos el trámite y acompañamos el proceso hasta la obtención de la licencia.</p>
+              </div>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl flex flex-col hover:border-blue-300 transition-colors">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
-                <Settings className="w-5 h-5" />
+            {/* Service 2: Certificación de Planta */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <Settings className="w-6 h-6" />
               </div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">Certificación de Planta</h4>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4 flex-1">
-                Para plantas procesadoras que necesitan ordenar expediente, auditoría v2, manuales e inspección.
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Certificación de Planta</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Acredita que tu planta cumple con las condiciones sanitarias exigidas por el MINSA para producir, procesar o envasar alimentos de forma segura y conforme a la normativa vigente.
               </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Empresas de productos cárnicos, lácteos, alimentos diversos, suplementos alimenticios, productos pesqueros, acuícolas y otras plantas de procesamiento sujetas a control sanitario.</p>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Realizamos diagnóstico técnico, verificamos cumplimiento, elaboramos documentación requerida y gestionamos el trámite.</p>
+              </div>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl flex flex-col hover:border-blue-300 transition-colors">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
-                <ClipboardList className="w-5 h-5" />
+            {/* Service 3: Registro Sanitario */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <ClipboardList className="w-6 h-6" />
               </div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">Registro Sanitario</h4>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4 flex-1">
-                Para marcas o productos empacados que requieren validar documentación y trámite ante MINSA.
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Registro Sanitario</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Obtén la autorización sanitaria que permite comercializar alimentos de forma legal en Panamá, garantizando el cumplimiento de la normativa vigente.
               </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Fabricantes, importadores y empresas que elaboran o comercializan alimentos y suplementos alimenticios que requieren autorización sanitaria antes de su venta.</p>
+                <div className="pt-1">
+                  <p className="font-bold text-slate-700 mb-1">Beneficios:</p>
+                  <ul className="list-disc list-inside space-y-0.5 text-slate-500">
+                    <li>Autoriza la comercialización legal.</li>
+                    <li>Demuestra cumplimiento sanitario.</li>
+                    <li>Genera confianza ante clientes y distribuidores.</li>
+                    <li>Vigencia de 5 años con opción de renovación.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl flex flex-col hover:border-blue-300 transition-colors">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
-                <Truck className="w-5 h-5" />
+            {/* Service 4: Constancia de Inspección Sanitaria para Transporte */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <Truck className="w-6 h-6" />
               </div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">Licencia Sanitaria de Transporte</h4>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4 flex-1">
-                Para empresas que movilizan alimentos y necesitan formalizar el transporte sanitario.
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Inspección Sanitaria para Transporte de Alimentos</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Acredita que tu servicio de transporte cumple con los requisitos sanitarios exigidos para el traslado seguro de alimentos y productos regulados.
               </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Transporte terrestre de alimentos, servicios de delivery de alimentos listos para consumo y transporte de productos higiénicos sujetos a control sanitario.</p>
+                <div className="pt-1">
+                  <p className="font-bold text-slate-700 mb-1">Beneficios:</p>
+                  <ul className="list-disc list-inside space-y-0.5 text-slate-500">
+                    <li>Cumplimiento ante MINSA.</li>
+                    <li>Respaldo durante inspecciones en vía.</li>
+                    <li>Mayor confianza en la inocuidad durante el transporte.</li>
+                    <li>Vigencia de 3 años, con opción de renovación.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl flex flex-col hover:border-blue-300 transition-colors">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
-                <FileText className="w-5 h-5" />
+            {/* Service 5: Constancia de Inspección para Establecimientos de Bajo Riesgo */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <FileText className="w-6 h-6" />
               </div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">Constancia de Inspección</h4>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4 flex-1">
-                Para negocios que requieren revisión, expediente formalizado y preparación ante inspección.
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Inspección para Locales de Bajo Riesgo</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Obtén la constancia que acredita que tu negocio cumple con los requisitos sanitarios para la preparación, manipulación y expendio de alimentos.
               </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p><strong className="text-slate-700">¿Quiénes la necesitan?:</strong> Mercados, productores artesanales, ferias, puestos de venta, fondas, kioscos, refresquerías, cocinas, comedores no industriales, hostales, cabañas y otros establecimientos donde se preparen, manipulen o expendan alimentos.</p>
+              </div>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl flex flex-col hover:border-blue-300 transition-colors">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
-                <Users className="w-5 h-5" />
+            {/* Service 6: Carnet Blanco */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <Award className="w-6 h-6" />
               </div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">Jornadas de Carnés Blanco y Verde</h4>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4 flex-1">
-                Para equipos manipuladores de alimentos que necesitan certificaciones vigentes sin demoras.
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Carnet Blanco (Salud)</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Obtén el certificado que acredita que el manipulador de alimentos cumple con las condiciones de salud requeridas para desempeñar sus funciones de forma segura.
               </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Toda persona que manipule, prepare, procese, transporte o comercialice alimentos en establecimientos de interés sanitario.</p>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Orientamos sobre requisitos, coordinamos el proceso y damos seguimiento para que tu personal obtenga su Carnet Blanco de forma oportuna.</p>
+              </div>
+            </div>
+
+            {/* Service 7: Carnet Verde */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <GraduationCap className="w-6 h-6" />
+              </div>
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Carnet Verde (Capacitación)</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Certifica que el manipulador de alimentos ha recibido la capacitación sanitaria necesaria para aplicar buenas prácticas de higiene e inocuidad.
+              </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p><strong className="text-slate-700">¿Quiénes lo necesitan?:</strong> Manipuladores de alimentos que deban demostrar capacitación oficial en manipulación higiénica de alimentos. Se obtiene después del Carnet Blanco y de completar la capacitación correspondiente.</p>
+              </div>
+            </div>
+
+            {/* Service 8: Sistema Documental de Inocuidad */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Sistema Documental de Inocuidad</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Creamos la documentación que tu empresa necesita para cumplir con la normativa sanitaria y gestionar la inocuidad de forma organizada y eficiente.
+              </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p className="font-bold text-slate-700">Incluye:</p>
+                <ul className="list-disc list-inside space-y-0.5 text-slate-500">
+                  <li>Manual de BPM (Buenas Prácticas de Manufactura).</li>
+                  <li>Procedimientos SSOP (Sanitización estándar).</li>
+                  <li>Plan HACCP personalizado.</li>
+                  <li>Formatos, registros de control, indicadores y seguimiento.</li>
+                </ul>
+                <p className="italic text-blue-700 pt-1 font-medium">No utilizamos formatos genéricos. Diseñamos manuales, programas y registros adaptados a los procesos, productos y necesidades específicas de cada establecimiento.</p>
+              </div>
+            </div>
+
+            {/* Service 9: Capacitación en Inocuidad Alimentaria */}
+            <div className="bg-slate-50 border border-slate-200/80 p-6 sm:p-8 rounded-2xl flex flex-col hover:border-blue-400 transition-all hover:shadow-xs group">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-105 transition-transform">
+                <Users className="w-6 h-6" />
+              </div>
+              <h4 className="text-xl font-bold text-blue-900 mb-3">Capacitación en Inocuidad Alimentaria</h4>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                Fortalece las competencias de tu equipo con programas de capacitación diseñados para cumplir con los requisitos del MINSA, mejorar la inocuidad y promover una cultura de cumplimiento.
+              </p>
+              <div className="border-t border-slate-200/60 pt-4 mt-auto space-y-2 text-xs text-slate-500">
+                <p><strong className="text-slate-700">Temas posibles:</strong> BPM, HACCP, Limpieza y desinfección, Control de temperaturas, Manejo integrado de plagas, Alérgenos, Contaminación cruzada.</p>
+                <p><strong className="text-slate-700">Cumplimiento normativo:</strong> El MINSA solicita que los establecimientos mantengan un programa documentado de capacitación, realizando al menos dos capacitaciones al año y conservando la evidencia para inspecciones.</p>
+                <p><strong className="text-slate-700">Cómo ayuda Tecnialimentos:</strong> Diseñamos un Plan Anual de Capacitación, impartimos capacitaciones, elaboramos material de apoyo y entregamos listas de asistencia, evaluaciones y constancias oficiales.</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 6. Sección Proceso */}
-      <section id="proceso" className="py-20 px-6 bg-slate-50">
+      {/* 6. Sección Nueva: Trámites y Procesos que Acompañamos */}
+      <section id="tramites" className="py-20 px-6 bg-slate-50 border-b border-slate-200/60">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-xs font-bold uppercase text-blue-600 tracking-wider mb-2 block font-display">Acompañamiento Paso a Paso</span>
+            <h2 className="text-3xl font-bold text-blue-900">Trámites y Procesos que Acompañamos</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto mt-4 text-sm sm:text-base leading-relaxed">
+              Haz clic en cada trámite para ver la ruta simplificada de acompañamiento técnico sanitario que diseñamos para tu negocio.
+            </p>
+          </div>
+
+          <div className="space-y-4 max-w-3xl mx-auto">
+            {processes.map((proc, index) => {
+              const isOpen = activeProcess === index;
+              return (
+                <div 
+                  key={proc.id} 
+                  className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xs transition-all duration-200"
+                >
+                  <button
+                    onClick={() => setActiveProcess(isOpen ? null : index)}
+                    className="w-full flex items-center justify-between p-5 text-left font-bold text-blue-900 hover:bg-slate-50/80 transition-colors focus:outline-hidden"
+                  >
+                    <span className="text-base sm:text-lg flex items-center gap-3">
+                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-xs font-extrabold">
+                        {index + 1}
+                      </span>
+                      {proc.title}
+                    </span>
+                    {isOpen ? <ChevronUp className="w-5 h-5 text-slate-500" /> : <ChevronDown className="w-5 h-5 text-slate-500" />}
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="px-5 pb-6 pt-1 border-t border-slate-100 bg-slate-50/40">
+                          <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-4">Ruta técnica de acompañamiento ({proc.steps.length} pasos):</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {proc.steps.map((step, i) => (
+                              <div key={i} className="flex gap-2.5 items-start bg-white p-3 rounded-xl border border-slate-100 shadow-3xs">
+                                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-black shrink-0 mt-0.5">
+                                  0{i + 1}
+                                </span>
+                                <span className="text-xs text-slate-600 leading-normal font-medium">{step}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Sección Proceso / ¿Cómo Trabajamos? */}
+      <section id="proceso" className="py-20 px-6 bg-white border-b border-slate-100">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-xs font-bold uppercase text-blue-600 tracking-wider mb-2 block font-display">La metodología</span>
             <h2 className="text-3xl font-bold text-blue-900">¿Cómo trabajamos?</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
             <div className="relative">
               <div className="text-5xl font-extrabold text-blue-100 mb-4">01</div>
               <h4 className="text-lg font-bold text-blue-900 mb-2">Diagnóstico inicial</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Identificamos posibles brechas en permisos, documentación y operación.
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                Realizamos una evaluación de tu negocio para identificar brechas en permisos, documentación, procesos, personal manipulador y cumplimiento sanitario.
               </p>
             </div>
 
             <div className="relative">
               <div className="text-5xl font-extrabold text-blue-100 mb-4">02</div>
               <h4 className="text-lg font-bold text-blue-900 mb-2">Revisión técnica</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Validamos qué aplica exactamente según el tipo de negocio, actividad y etapa actual.
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                Analizamos los requisitos que aplican según el tipo de establecimiento, la actividad que desarrolla y la normativa sanitaria vigente.
               </p>
             </div>
 
             <div className="relative">
               <div className="text-5xl font-extrabold text-blue-100 mb-4">03</div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">Ruta de acción</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Definimos si necesitas licencia, registro, auditoría, manuales, capacitación o preparación para inspección.
+              <h4 className="text-lg font-bold text-blue-900 mb-2">Plan de acción</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                Diseñamos una ruta de trabajo personalizada que puede incluir permisos, registros sanitarios, manuales, programas de inocuidad, capacitación o preparación para inspecciones.
               </p>
             </div>
 
             <div className="relative">
               <div className="text-5xl font-extrabold text-blue-100 mb-4">04</div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">Acompañamiento</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Te ayudamos a ordenar documentos, expediente, procesos y seguimiento constante.
+              <h4 className="text-lg font-bold text-blue-900 mb-2">Implementación</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                Te acompañamos en la organización de la documentación, elaboración de manuales y registros, gestión de trámites, capacitación del personal e implementación de los controles necesarios.
+              </p>
+            </div>
+
+            <div className="relative">
+              <div className="text-5xl font-extrabold text-blue-100 mb-4">05</div>
+              <h4 className="text-lg font-bold text-blue-900 mb-2">Seguimiento continuo</h4>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                Brindamos asesoría permanente para mantener tu negocio en cumplimiento, preparar renovaciones, atender inspecciones y fortalecer la inocuidad de tus procesos.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. Sección CTA Final */}
+      {/* 8. Sección CTA Final */}
       <section className="bg-gradient-to-br from-blue-900 to-blue-950 py-16 px-6 text-white text-center sm:py-20 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-5">
           <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
@@ -379,22 +651,33 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
 
         <div className="max-w-3xl mx-auto relative z-10">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Antes de avanzar, identifica qué debe revisar tu negocio
+            Convierte tu diagnóstico en un plan de acción sanitario
           </h2>
           <p className="text-lg text-slate-200 leading-relaxed max-w-2xl mx-auto mb-10">
-            El diagnóstico gratuito no reemplaza una revisión técnica completa, pero te ayuda a detectar áreas prioritarias y tomar mejores decisiones antes de una inspección, apertura, ampliación o trámite sanitario.
+            El diagnóstico gratuito te ayuda a detectar áreas prioritarias. Si tu negocio necesita avanzar con permisos, documentación, capacitación, registros, manuales o preparación para una inspección, Tecnialimentos puede acompañarte en cada etapa.
           </p>
-          <button 
-            onClick={onStartQuiz}
-            className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-blue-900 font-bold rounded-xl active:scale-[0.98] hover:bg-slate-50 transition-all shadow-md text-lg cursor-pointer"
-          >
-            Hacer diagnóstico gratuito
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 text-blue-600 transition-transform" />
-          </button>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <button 
+              onClick={onStartQuiz}
+              className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-blue-900 font-bold rounded-xl active:scale-[0.98] hover:bg-slate-50 transition-all shadow-md text-lg cursor-pointer"
+            >
+              Hacer diagnóstico gratuito
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 text-blue-600 transition-transform" />
+            </button>
+            <a 
+              href="https://wa.me/50766953832?text=Hola,%20quisiera%20conversar%20con%20un%20asesor%20sobre%20los%20servicios%20de%20Tecnialimentos."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border border-blue-200/50 hover:bg-white/10 text-white font-bold rounded-xl transition-all text-lg"
+            >
+              <Phone className="w-5 h-5 text-blue-400" />
+              Hablar con un asesor
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* 8. Footer */}
+      {/* 9. Footer */}
       <footer className="bg-white border-t border-slate-200 py-12 px-6">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           <div>
@@ -410,13 +693,13 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               <span className="text-lg font-bold text-blue-900 tracking-tight">Tecnialimentos</span>
             </div>
             <p className="text-xs text-slate-500 max-w-sm">
-              Soluciones técnicas integrales y cumplimiento regulatorio para la industria de alimentos y bebidas en Panamá.
+              Soluciones técnicas en cumplimiento sanitario, inocuidad alimentaria, documentación, capacitación y trámites ante autoridades sanitarias para negocios de alimentos en Panamá.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-8 text-sm font-semibold text-slate-600">
-            <button onClick={() => scrollToSection("diagnostico")} className="hover:text-blue-600 transition-colors">Diagnóstico</button>
-            <button onClick={() => scrollToSection("servicios")} className="hover:text-blue-600 transition-colors">Servicios</button>
+            <button onClick={() => scrollToSection("diagnostico")} className="hover:text-blue-600 transition-colors cursor-pointer">Diagnóstico</button>
+            <button onClick={() => scrollToSection("servicios")} className="hover:text-blue-600 transition-colors cursor-pointer">Servicios</button>
             <a href="https://wa.me/50766953832" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors">Contacto</a>
             <a href="#" className="hover:text-blue-600 transition-colors">Privacidad</a>
           </div>
